@@ -1,0 +1,23 @@
+{
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "src",
+  "compilerOptions": {
+    "assets": [
+      "**/*.json"
+    ],
+    "plugins": [
+      {
+        "name": "@nestjs/swagger",
+        "options": {
+          "dtoFileNameSuffix": [".dto.ts"],
+          "classValidatorShim": true,
+          "introspectComments": true
+        }
+      }
+    ],
+    "watchAssets": true
+  },
+  "watchOptions": {
+    "ignored": "**/node_modules"
+  }
+}
