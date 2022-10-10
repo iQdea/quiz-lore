@@ -7,6 +7,7 @@ import { EmailPasswordLoginService } from './recipes/email-password-login.servic
 import { CommonService } from './utils/common.service';
 import { UserModule } from '../user/user.module';
 import { SessionService } from './recipes/session.service';
+import { DashboardService } from './recipes/dashboard.service';
 
 @Module({})
 export class AuthSupertokensModule implements NestModule {
@@ -25,7 +26,8 @@ export class AuthSupertokensModule implements NestModule {
         AuthSupertokensService,
         EmailPasswordLoginService,
         PasswordlessService,
-        SessionService
+        SessionService,
+        DashboardService
       ],
       exports: [],
       imports: [UserModule],

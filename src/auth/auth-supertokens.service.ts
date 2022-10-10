@@ -5,6 +5,7 @@ import { EmailPasswordLoginService } from './recipes/email-password-login.servic
 import { PasswordlessService } from './recipes/passwordless.service';
 import UserMetadata from 'supertokens-node/recipe/usermetadata';
 import { SessionService } from './recipes/session.service';
+import { DashboardService } from './recipes/dashboard.service';
 
 @Injectable()
 export class AuthSupertokensService {
@@ -12,7 +13,8 @@ export class AuthSupertokensService {
     @Inject(ConfigInjectionToken) private config: AuthModuleConfig,
     private readonly emailPasswordLoginService: EmailPasswordLoginService,
     private readonly passwordless: PasswordlessService,
-    private readonly session: SessionService
+    private readonly session: SessionService,
+    private readonly dashboard: DashboardService
   ) {
     supertokens.init({
       appInfo: this.config.appInfo,
@@ -24,6 +26,7 @@ export class AuthSupertokensService {
         this.passwordless.init(),
         this.emailPasswordLoginService.init(),
         this.session.init(),
+        this.dashboard.init(),
         UserMetadata.init()
       ]
     });
