@@ -5,6 +5,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
 import supertokensSwagger from './auth/swagger-supertokens.json';
 import { SupertokensExceptionFilter } from './auth/auth-supertokens.filter';
+import { bot } from './bot/bot';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -59,3 +60,4 @@ async function bootstrap() {
   await app.listen(port);
 }
 bootstrap();
+bot();
