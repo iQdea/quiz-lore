@@ -1,14 +1,12 @@
-import { Entity, IdentifiedReference, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core';
+import { Entity, IdentifiedReference, ManyToOne, Property } from '@mikro-orm/core';
 import { Quiz } from './quiz.entity';
+import { BaseEntity } from './base.entity';
 
 @Entity({
   schema: 'quiz_lore_participant',
   tableName: 'participant'
 })
-export class Participant {
-  @PrimaryKey({ type: 'uuid', defaultRaw: 'uuid_generate_v4()' })
-  id!: string;
-
+export class Participant extends BaseEntity<Participant> {
   @Property()
   nick!: string;
 
@@ -17,5 +15,5 @@ export class Participant {
     wrappedReference: true,
     nullable: true
   })
-  ref!: IdentifiedReference<Quiz>;
+  quiz!: IdentifiedReference<Quiz>;
 }
