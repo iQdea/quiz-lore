@@ -33,6 +33,7 @@
     "@nestjs/platform-express": "^8.0.0",
     "@nestjs/swagger": "^6.1.2",
     "@types/cookie-parser": "^1.4.3",
+    "@types/debug": "^4.1.7",
     "axios": "^1.1.2",
     "cls-rtracer": "^2.6.2",
     "confusing-browser-globals": "^1.0.11",

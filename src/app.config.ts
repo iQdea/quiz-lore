@@ -6,6 +6,9 @@ export interface AppConfig {
   database: string;
   supertokens: AuthModuleConfig;
   cors: CorsOptions;
+  bot: {
+    token: string;
+  };
 }
 
 export default (): AppConfig => ({
@@ -26,5 +29,8 @@ export default (): AppConfig => ({
     origin: true,
     methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
     credentials: true
+  },
+  bot: {
+    token: process.env.BOT_TOKEN || ''
   }
 });
