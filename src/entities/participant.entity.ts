@@ -3,7 +3,7 @@ import { Quiz } from './quiz.entity';
 import { BaseEntity } from './base.entity';
 
 @Entity({
-  schema: 'quiz_lore_participant',
+  schema: 'participant',
   tableName: 'participant'
 })
 export class Participant extends BaseEntity<Participant> {

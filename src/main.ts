@@ -1,4 +1,4 @@
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -6,6 +6,8 @@ import cookieParser from 'cookie-parser';
 import supertokensSwagger from './auth/swagger-supertokens.json';
 import { SupertokensExceptionFilter } from './auth/auth-supertokens.filter';
 import { bot } from './bot/bot';
+import { ResponseSerializerInterceptor } from './common/utils/serializer';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -13,6 +15,15 @@ async function bootstrap() {
   });
   app.use(cookieParser());
 
+  app.useGlobalPipes(new ValidationPipe());
+
+  // Response serializer
+  app.useGlobalInterceptors(
+    new ResponseSerializerInterceptor(app.get(Reflector), {
+      exposeDefaultValues: true,
+      exposeUnsetFields: false
+    })
+  );
   // Swagger / OpenAPI
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Quiz-Lore Public API')
