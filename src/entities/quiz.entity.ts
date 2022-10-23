@@ -1,4 +1,4 @@
-import { Collection, Entity, OneToMany, Property } from '@mikro-orm/core';
+import { Collection, Entity, OneToMany, Property, Unique } from '@mikro-orm/core';
 import { Participant } from './participant.entity';
 import { BaseEntity } from './base.entity';
 import { Question } from './question.entity';
@@ -9,6 +9,7 @@ import { Question } from './question.entity';
 })
 export class Quiz extends BaseEntity<Quiz, 'isActive'> {
   @Property()
+  @Unique()
   displayName!: string;
 
   @Property({ type: 'uuid' })

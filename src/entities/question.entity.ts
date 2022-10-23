@@ -14,7 +14,7 @@ export class Question extends BaseEntity<Question> {
   @ManyToOne({
     entity: () => Quiz,
     wrappedReference: true,
-    nullable: false
+    nullable: true
   })
   quiz!: IdentifiedReference<Quiz>;
 

@@ -1,11 +1,10 @@
 import { Body, Controller, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger';
 import { AuthSupertokensGuard } from '../../auth/auth-supertokens.guard';
-import { Quiz } from '../../entities/quiz.entity';
 import { QuizService } from '../../quiz/quiz.service';
-import { createQuizDtoRequest, QuizDtoResponse, ShowQuizDtoResponse } from '../../quiz/quiz.dto';
+import { createQuizDtoRequest, QuizDtoResponse, ShowQuizDtoResponse, updateQuizDtoRequest } from '../../quiz/quiz.dto';
 import { UserId } from '../../auth/session.decorator';
-import { EndpointResponse } from '../../common/utils/serializer';
+import { CollectionResponse, EndpointResponse } from '../../common/utils/serializer';
 
 @ApiTags('Quiz')
 @Controller({
@@ -15,12 +14,20 @@ import { EndpointResponse } from '../../common/utils/serializer';
 export class QuizController {
   constructor(private readonly quizService: QuizService) {}
 
-  @Post()
+  @Get('/user_collection')
   @UseGuards(AuthSupertokensGuard)
-  async createQuiz(@Body() data: createQuizDtoRequest, @UserId() userId: string): EndpointResponse<QuizDtoResponse> {
+  async showAllForUser(@UserId() userId: string): CollectionResponse<QuizDtoResponse> {
     return {
       dto: QuizDtoResponse,
-      data: await this.quizService.createQuiz({ ...data, createdById: userId })
+      data: await this.quizService.getAllByUserId(userId)
+    };
+  }
+
+  @Get('/history')
+  async getHistory(): CollectionResponse<ShowQuizDtoResponse> {
+    return {
+      dto: ShowQuizDtoResponse,
+      data: await this.quizService.getHistory()
     };
   }
 
@@ -32,17 +39,22 @@ export class QuizController {
     };
   }
 
-  @Patch(':id')
-  @ApiExcludeEndpoint()
+  @Post()
   @UseGuards(AuthSupertokensGuard)
-  async updateQuiz(@Body() data: Quiz, @Param('id') quizId: string): Promise<any> {
-    return await this.quizService.updateQuiz(data, quizId);
+  async createQuiz(@Body() data: createQuizDtoRequest, @UserId() userId: string): EndpointResponse<QuizDtoResponse> {
+    return {
+      dto: QuizDtoResponse,
+      data: await this.quizService.createQuiz({ ...data, createdById: userId })
+    };
   }
 
-  @Get('/history')
-  @ApiExcludeEndpoint()
-  async getHistory(): Promise<any[]> {
-    return await this.quizService.getHistory();
+  @Patch(':id')
+  @UseGuards(AuthSupertokensGuard)
+  async updateQuiz(@Body() data: updateQuizDtoRequest, @Param('id') quizId: string): EndpointResponse<QuizDtoResponse> {
+    return {
+      dto: QuizDtoResponse,
+      data: await this.quizService.updateQuiz(data, quizId)
+    };
   }
 
   @Get('/ratings')

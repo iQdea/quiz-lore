@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, Length } from 'class-validator';
-import { Exclude, Expose, Type } from 'class-transformer';
+import { Exclude, Expose } from 'class-transformer';
 
 @Exclude()
 class Question {
@@ -23,16 +23,17 @@ class Question {
 export class createQuestionDtoRequest extends Question {}
 
 @Exclude()
+export class updateQuestionDtoRequest {
+  @Expose()
+  @ApiProperty()
+  @IsNotEmpty()
+  @Length(3, 255)
+  question!: string;
+}
+
+@Exclude()
 export class QuestionDtoResponse extends Question {
   @Expose()
   @ApiProperty()
   id!: string;
-}
-
-@Exclude()
-export class QuestionsDtoResponse {
-  @Expose()
-  @Type(() => QuestionDtoResponse)
-  @ApiProperty({ type: [QuestionDtoResponse] })
-  questions?: QuestionDtoResponse[];
 }

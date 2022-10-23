@@ -1,5 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, Length, ValidateNested } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsBoolean, IsNotEmpty, IsOptional, IsString, IsUUID, Length, ValidateNested } from 'class-validator';
 import { Exclude, Expose, Type } from 'class-transformer';
 
 @Exclude()
@@ -8,6 +8,7 @@ class Option {
   @ApiProperty({
     description: 'The option for a question'
   })
+  @IsString()
   @IsNotEmpty()
   @Length(2, 255)
   text!: string;
@@ -16,6 +17,8 @@ class Option {
   @ApiProperty({
     description: 'The ID of the question'
   })
+  @IsString()
+  @IsUUID('4')
   @IsNotEmpty()
   questionId!: string;
 
@@ -24,6 +27,7 @@ class Option {
     description: 'Whether the option is answer or not',
     example: true
   })
+  @IsBoolean()
   @IsNotEmpty()
   isAnswer!: boolean;
 }
@@ -35,6 +39,22 @@ export class createOptionsDtoRequest {
   @ApiProperty({ type: [Option] })
   @ValidateNested({ each: true })
   options!: Option[];
+}
+
+@Exclude()
+export class updateOptionDtoRequest {
+  @Expose()
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  @Length(2, 255)
+  text?: string;
+
+  @Expose()
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsBoolean()
+  isAnswer?: boolean;
 }
 
 @Exclude()
@@ -54,12 +74,4 @@ export class ShowOption {
   @Expose()
   @ApiProperty()
   isAnswer!: boolean;
-}
-
-@Exclude()
-export class OptionsDtoResponse {
-  @Expose()
-  @Type(() => ShowOption)
-  @ApiProperty({ type: [ShowOption] })
-  options!: ShowOption[];
 }

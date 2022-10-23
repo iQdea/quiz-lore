@@ -19,6 +19,8 @@ export interface CollectionResponseBody<D = Record<string, any>, M = Record<stri
 }
 
 export type EndpointResponse<D> = Promise<SingularReponseBody<D>>;
+export type CollectionResponse<D> = Promise<CollectionResponseBody<D>>;
+export type EmptyEndpointResponse = Promise<void>;
 
 @Injectable()
 export class ResponseSerializerInterceptor extends ClassSerializerInterceptor {

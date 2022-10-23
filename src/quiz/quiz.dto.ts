@@ -1,5 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, Length } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsNotEmpty, IsOptional, Length } from 'class-validator';
 import { Exclude, Expose, Type } from 'class-transformer';
 
 @Exclude()
@@ -19,6 +19,20 @@ export class QuizDto {
   description?: string;
 }
 export class createQuizDtoRequest extends QuizDto {}
+
+@Exclude()
+export class updateQuizDtoRequest {
+  @Expose()
+  @ApiPropertyOptional()
+  @IsOptional()
+  @Length(3, 255)
+  displayName?: string;
+
+  @Expose()
+  @ApiPropertyOptional()
+  @IsOptional()
+  description?: string;
+}
 
 @Exclude()
 export class QuizDtoResponse extends QuizDto {
