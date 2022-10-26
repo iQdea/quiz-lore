@@ -5,16 +5,17 @@ import { Dictionary } from '../../interfaces/interface';
 export const emailLoginWizard = new Scenes.WizardScene<any>(
   'EMAIL_PASSWORD_LOGIN',
   (ctx) => {
+    ctx.session.contactData = {};
     ctx.reply('Enter your email');
     return ctx.wizard.next();
   },
   (ctx) => {
-    ctx.session.contactData.email = ctx.message.text;
+    Object.assign(ctx.session.contactData, { email: ctx.message.text });
     ctx.reply('Enter your password');
     return ctx.wizard.next();
   },
   async (ctx) => {
-    ctx.session.contactData.password = ctx.message.text;
+    Object.assign(ctx.session.contactData, { password: ctx.message.text });
     const res = await axios.post('http://localhost:3300/auth/signup', {
       formFields: [
         {
@@ -35,7 +36,7 @@ export const emailLoginWizard = new Scenes.WizardScene<any>(
         const value = cookie.split(';')[0];
         cookiesList[value.split('=')[0]] = value.split('=')[1];
       }
-      Object.assign(ctx.session.auth, cookiesList);
+      Object.assign(ctx.session, { auth: cookiesList });
       await ctx.reply('Successfully');
     } else {
       const res = await axios.post('http://localhost:3300/auth/signin', {
@@ -58,7 +59,7 @@ export const emailLoginWizard = new Scenes.WizardScene<any>(
           const value = cookie.split(';')[0];
           cookiesList[value.split('=')[0]] = value.split('=')[1];
         }
-        Object.assign(ctx.session.auth, cookiesList);
+        Object.assign(ctx.session, { auth: cookiesList });
         await ctx.reply('Successfully');
       }
     }
