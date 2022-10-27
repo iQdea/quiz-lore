@@ -1,30 +1,31 @@
-import { Scenes, Telegraf, session, Markup } from 'telegraf';
-import { emailLoginWizard, phoneLoginWizard, getProfileWizard, editProfileWizard } from './scenes';
+import { Scenes, Telegraf, session } from 'telegraf';
+import {
+  emailLoginWizard,
+  phoneLoginWizard,
+  getProfileWizard,
+  editProfileWizard,
+  mainWizard,
+  profileWizard
+} from './scenes';
 import appConfig from '../app.config';
 
 export async function bot() {
   const bot = new Telegraf<Scenes.WizardContext>(appConfig().bot.token);
-  const stage = new Scenes.Stage([emailLoginWizard, phoneLoginWizard, getProfileWizard, editProfileWizard]);
+  const stage = new Scenes.Stage([
+    emailLoginWizard,
+    phoneLoginWizard,
+    getProfileWizard,
+    editProfileWizard,
+    mainWizard,
+    profileWizard
+  ]);
   bot.use(session());
   bot.use(stage.middleware());
   bot.start(async (ctx) => {
-    await ctx.reply(
-      'Which way you want to continue with?',
-      Markup.keyboard([
-        Markup.button.contactRequest('Share Phone Number'),
-        Markup.button.callback('Email/Password', 'email'),
-        Markup.button.callback('Profile', 'profile')
-      ])
-    );
+    ctx.scene.enter('MAIN');
   });
   bot.hears('Profile', async (ctx) => {
-    ctx.reply(
-      'Actions with profile',
-      Markup.keyboard([
-        Markup.button.callback('Get Profile', 'get_profile'),
-        Markup.button.callback('Edit Profile', 'edit_profile')
-      ])
-    );
+    ctx.scene.enter('PROFILE');
   });
 
   bot.hears('Email/Password', async (ctx) => {
@@ -41,6 +42,11 @@ export async function bot() {
 
   bot.hears('Edit Profile', async (ctx) => {
     ctx.scene.enter('EDIT_PROFILE');
+  });
+  bot.hears('Cancel', async (ctx) => {
+    if (JSON.parse(JSON.stringify(ctx.session)).previousSection === 'start') {
+      ctx.scene.enter('MAIN');
+    }
   });
   await bot.launch();
 }

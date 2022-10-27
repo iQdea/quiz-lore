@@ -7,7 +7,9 @@ export const phoneLoginWizard = new Scenes.WizardScene<any>(
   async (ctx) => {
     ctx.session.contactData = { phone: ctx.wizard.state.phone };
     const res = await axios.post('http://localhost:3300/auth/signinup/code', {
-      phoneNumber: '+' + ctx.session.contactData.phone
+      phoneNumber: ctx.session.contactData.phone.startsWith('+')
+        ? ctx.session.contactData.phone
+        : '+' + ctx.session.contactData.phone
     });
     const data = res.data;
     const { deviceId, preAuthSessionId } = data;
