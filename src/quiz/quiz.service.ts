@@ -28,7 +28,7 @@ export class QuizService {
         createdAt: {
           $lt: new Date()
         },
-        isActive: false
+        isActive: true
       },
       { populate: true }
     );

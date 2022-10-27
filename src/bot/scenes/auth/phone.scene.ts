@@ -14,7 +14,7 @@ export const phoneLoginWizard = new Scenes.WizardScene<any>(
     const data = res.data;
     const { deviceId, preAuthSessionId } = data;
     Object.assign(ctx.session, { preauthData: { deviceId, preAuthSessionId } });
-    await ctx.reply(`Your phone is ${ctx.session.contactData.phone}, send your otp`);
+    ctx.reply(`Your phone is ${ctx.session.contactData.phone}, send your otp`);
     await ctx.wizard.next();
   },
   async (ctx) => {
@@ -32,7 +32,7 @@ export const phoneLoginWizard = new Scenes.WizardScene<any>(
         cookiesList[value.split('=')[0]] = value.split('=')[1];
       }
       Object.assign(ctx.session, { auth: { ...cookiesList } });
-      await ctx.reply('Successfully');
+      ctx.reply('Successfully');
     }
     await ctx.scene.leave();
   }

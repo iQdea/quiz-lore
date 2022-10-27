@@ -37,7 +37,7 @@ export const emailLoginWizard = new Scenes.WizardScene<any>(
         cookiesList[value.split('=')[0]] = value.split('=')[1];
       }
       Object.assign(ctx.session, { auth: cookiesList });
-      await ctx.reply('Successfully');
+      ctx.reply('Successfully');
     } else {
       const res = await axios.post('http://localhost:3300/auth/signin', {
         formFields: [
@@ -60,7 +60,7 @@ export const emailLoginWizard = new Scenes.WizardScene<any>(
           cookiesList[value.split('=')[0]] = value.split('=')[1];
         }
         Object.assign(ctx.session, { auth: cookiesList });
-        await ctx.reply('Successfully');
+        ctx.reply('Successfully');
       }
     }
     await ctx.scene.leave();
