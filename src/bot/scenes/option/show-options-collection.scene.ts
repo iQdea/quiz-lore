@@ -10,6 +10,9 @@ export const getOptionsCollectionWizard = new Scenes.WizardScene<any>(
   async (ctx) => {
     const res = await axios.get(`http://localhost:3300/option/${ctx.message.text}`);
     const { data: options_collection } = res.data;
+    if (options_collection.length === 0) {
+      ctx.reply('There are no options');
+    }
     for (const item of options_collection) {
       ctx.reply(
         `ID: ${item.id} \n\n` +

@@ -1,4 +1,4 @@
-import { Scenes } from 'telegraf';
+import { Markup, Scenes } from 'telegraf';
 import axios from 'axios';
 import { Dictionary } from '../../interfaces/interface';
 
@@ -37,7 +37,7 @@ export const emailLoginWizard = new Scenes.WizardScene<any>(
         cookiesList[value.split('=')[0]] = value.split('=')[1];
       }
       Object.assign(ctx.session, { auth: cookiesList });
-      ctx.reply('Successfully');
+      ctx.reply('Successfully', Markup.inlineKeyboard([Markup.button.callback('Start work', 'start_work')]));
     } else {
       const res = await axios.post('http://localhost:3300/auth/signin', {
         formFields: [
@@ -60,7 +60,7 @@ export const emailLoginWizard = new Scenes.WizardScene<any>(
           cookiesList[value.split('=')[0]] = value.split('=')[1];
         }
         Object.assign(ctx.session, { auth: cookiesList });
-        ctx.reply('Successfully');
+        ctx.reply('Successfully', Markup.inlineKeyboard([Markup.button.callback('Start work', 'start_work')]));
       }
     }
     await ctx.scene.leave();

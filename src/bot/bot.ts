@@ -88,6 +88,9 @@ export async function bot() {
       if (previousSection !== undefined) {
         await ctx.scene.enter(previousSection);
       }
+    })
+    .action('start_work', async (ctx) => {
+      await ctx.scene.enter('MAIN');
     });
   await bot.launch();
 }

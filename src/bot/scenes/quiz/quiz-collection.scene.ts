@@ -9,6 +9,9 @@ export const getQuizUserCollectionWizard = new Scenes.WizardScene<any>('GET_QUIZ
     }
   });
   const { data: quiz_collection } = res.data;
+  if (quiz_collection.length === 0) {
+    ctx.reply(`There are no quiz's`);
+  }
   for (const quiz of quiz_collection) {
     ctx.reply(`ID: ${quiz.id} \n\n` + `Название: ${quiz.displayName} \n\n` + `Описание: ${quiz.description} \n\n`);
   }

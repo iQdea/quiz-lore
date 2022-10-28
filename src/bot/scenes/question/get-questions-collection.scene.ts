@@ -10,6 +10,9 @@ export const getQuestionsCollectionWizard = new Scenes.WizardScene<any>(
   async (ctx) => {
     const res = await axios.get(`http://localhost:3300/question/${ctx.message.text}`);
     const { data: questions_collection } = res.data;
+    if (questions_collection.length === 0) {
+      ctx.reply('There are no questions');
+    }
     for (const item of questions_collection) {
       ctx.reply(`ID: ${item.id} \n\n` + `Вопрос: ${item.question} \n\n` + `ID квиза: ${item.quizId} \n\n`);
     }
