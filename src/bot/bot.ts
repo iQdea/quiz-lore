@@ -11,79 +11,85 @@ export async function bot() {
     .hears('/start', async (ctx) => {
       await ctx.scene.enter('MAIN');
     })
-    .hears('SignInUp', async (ctx) => {
+    .action('signinup', async (ctx) => {
       await ctx.scene.enter('SIGNINUP');
     })
-    .hears('SignOut', async (ctx) => {
+    .action('signout', async (ctx) => {
       await ctx.scene.enter('SIGNOUT');
     })
-    .hears('Profile', async (ctx) => {
+    .action('profile', async (ctx) => {
       await ctx.scene.enter('PROFILE');
     })
-    .hears('Quiz', async (ctx) => {
+    .action('quiz', async (ctx) => {
       await ctx.scene.enter('QUIZ');
     })
-    .hears('Questions', async (ctx) => {
+    .action('questions', async (ctx) => {
       await ctx.scene.enter('QUESTIONS');
     })
-    .hears('Show questions for quiz', async (ctx) => {
+    .action('show_questions', async (ctx) => {
       await ctx.scene.enter('GET_QUESTIONS_COLLECTION');
     })
-    .hears('Create question', async (ctx) => {
+    .action('create_question', async (ctx) => {
       await ctx.scene.enter('CREATE_QUESTION');
     })
-    .hears('Edit question', async (ctx) => {
+    .action('edit_question', async (ctx) => {
       await ctx.scene.enter('EDIT_QUESTION');
     })
-    .hears('Delete question', async (ctx) => {
+    .action('delete_question', async (ctx) => {
       await ctx.scene.enter('DELETE_QUESTION');
     })
-    .hears('Options', async (ctx) => {
+    .action('options', async (ctx) => {
       await ctx.scene.enter('OPTIONS');
     })
-    .hears('Create options for question', async (ctx) => {
+    .action('create_options', async (ctx) => {
       await ctx.scene.enter('CREATE_OPTIONS');
     })
-    .hears('Add option', async (ctx) => {
+    .action('add_option', async (ctx) => {
       await ctx.scene.enter('ADD_OPTION');
     })
-    .hears('Edit option', async (ctx) => {
+    .action('edit_option', async (ctx) => {
       await ctx.scene.enter('EDIT_OPTION');
     })
-    .hears('Delete option', async (ctx) => {
+    .action('delete_option', async (ctx) => {
       await ctx.scene.enter('DELETE_OPTION');
     })
-    .hears('Show options for question', async (ctx) => {
+    .action('show_options', async (ctx) => {
       await ctx.scene.enter('GET_OPTIONS_COLLECTION');
     })
-    .hears('Email/Password', async (ctx) => {
+    .action('email', async (ctx) => {
       await ctx.scene.enter('EMAIL_PASSWORD_LOGIN');
     })
     .on('contact', async (ctx) => {
       await ctx.scene.enter('PHONE_LOGIN', { phone: ctx.message.contact.phone_number });
     })
-    .hears('Get Profile', async (ctx) => {
+    .action('get_profile', async (ctx) => {
       await ctx.scene.enter('GET_PROFILE');
     })
-    .hears('Edit Profile', async (ctx) => {
+    .action('edit_profile', async (ctx) => {
       await ctx.scene.enter('EDIT_PROFILE');
     })
-    .hears('Create quiz', async (ctx) => {
+    .action('create_quiz', async (ctx) => {
       await ctx.scene.enter('CREATE_QUIZ');
     })
-    .hears(`Get my quiz's`, async (ctx) => {
+    .action(`get_user_quiz_collection`, async (ctx) => {
       await ctx.scene.enter('GET_QUIZ_USER_COLLECTION');
     })
-    .hears('Get history', async (ctx) => {
+    .action('get_history', async (ctx) => {
       await ctx.scene.enter('GET_HISTORY');
     })
-    .hears('Get current quiz', async (ctx) => {
+    .action('get_quiz', async (ctx) => {
       await ctx.scene.enter('GET_QUIZ');
     })
-    .hears('Edit quiz', async (ctx) => {
+    .action('edit_quiz', async (ctx) => {
       await ctx.scene.enter('EDIT_QUIZ');
     })
-    .hears('Cancel', async (ctx) => {
+    .hears('No', async (ctx) => {
+      const { previousSection } = JSON.parse(JSON.stringify(ctx.session));
+      if (previousSection !== undefined) {
+        await ctx.scene.enter(previousSection);
+      }
+    })
+    .action('cancel', async (ctx) => {
       const { previousSection } = JSON.parse(JSON.stringify(ctx.session));
       if (previousSection !== undefined) {
         await ctx.scene.enter(previousSection);
@@ -91,6 +97,9 @@ export async function bot() {
     })
     .action('start_work', async (ctx) => {
       await ctx.scene.enter('MAIN');
+    })
+    .action('phone', async (ctx) => {
+      await ctx.scene.enter('ALLOW_PHONE');
     });
   await bot.launch();
 }

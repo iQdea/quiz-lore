@@ -12,7 +12,10 @@ export const createOptionsWizard = new Scenes.WizardScene<any>(
     Object.assign(ctx.session, { optionContext: { questionId: ctx.message.text }, previousSection: 'OPTIONS' });
     ctx.reply(
       'Click Add option to create new option',
-      Markup.keyboard([Markup.button.callback(`Add option`, `add_option`), Markup.button.callback('Cancel', 'cancel')])
+      Markup.inlineKeyboard([
+        Markup.button.callback(`Add option`, `add_option`),
+        Markup.button.callback('Cancel', 'cancel')
+      ])
     );
     await ctx.scene.leave();
   }
@@ -56,7 +59,7 @@ export const addOptionWizard = new Scenes.WizardScene<any>(
       );
       const { data: options } = res.data;
       ctx.reply(JSON.stringify(options));
-      await ctx.scene.enter('OPTIONS');
+      await ctx.scene.leave();
     }
   }
 );
