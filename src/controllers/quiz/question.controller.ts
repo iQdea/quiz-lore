@@ -47,6 +47,7 @@ export class QuestionController {
   }
 
   @Delete('')
+  @UseGuards(AuthSupertokensGuard)
   async deleteFromQuiz(
     @Query('question_id') question_id: string,
     @Query('quiz_id') quiz_id: string

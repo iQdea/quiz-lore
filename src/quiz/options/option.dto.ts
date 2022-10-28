@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsBoolean, IsNotEmpty, IsOptional, IsString, IsUUID, Length, ValidateNested } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsOptional, IsString, Length, ValidateNested } from 'class-validator';
 import { Exclude, Expose, Type } from 'class-transformer';
 
 @Exclude()
@@ -10,7 +10,7 @@ class Option {
   })
   @IsString()
   @IsNotEmpty()
-  @Length(2, 255)
+  @Length(1, 255)
   text!: string;
 
   @Expose()
@@ -18,7 +18,6 @@ class Option {
     description: 'The ID of the question'
   })
   @IsString()
-  @IsUUID('4')
   @IsNotEmpty()
   questionId!: string;
 

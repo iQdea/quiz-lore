@@ -26,8 +26,35 @@ export async function bot() {
     .hears('Questions', async (ctx) => {
       await ctx.scene.enter('QUESTIONS');
     })
+    .hears('Show questions for quiz', async (ctx) => {
+      await ctx.scene.enter('GET_QUESTIONS_COLLECTION');
+    })
+    .hears('Create question', async (ctx) => {
+      await ctx.scene.enter('CREATE_QUESTION');
+    })
+    .hears('Edit question', async (ctx) => {
+      await ctx.scene.enter('EDIT_QUESTION');
+    })
+    .hears('Delete question', async (ctx) => {
+      await ctx.scene.enter('DELETE_QUESTION');
+    })
     .hears('Options', async (ctx) => {
       await ctx.scene.enter('OPTIONS');
+    })
+    .hears('Create options for question', async (ctx) => {
+      await ctx.scene.enter('CREATE_OPTIONS');
+    })
+    .hears('Add option', async (ctx) => {
+      await ctx.scene.enter('ADD_OPTION');
+    })
+    .hears('Edit option', async (ctx) => {
+      await ctx.scene.enter('EDIT_OPTION');
+    })
+    .hears('Delete option', async (ctx) => {
+      await ctx.scene.enter('DELETE_OPTION');
+    })
+    .hears('Show options for question', async (ctx) => {
+      await ctx.scene.enter('GET_OPTIONS_COLLECTION');
     })
     .hears('Email/Password', async (ctx) => {
       await ctx.scene.enter('EMAIL_PASSWORD_LOGIN');

@@ -8,6 +8,19 @@ import {
   getQuizUserCollectionWizard,
   getQuizWizard
 } from './quiz';
+import {
+  getQuestionsCollectionWizard,
+  createQuestionWizard,
+  editQuestionWizard,
+  deleteQuestionWizard
+} from './question';
+import {
+  addOptionWizard,
+  createOptionsWizard,
+  deleteOptionWizard,
+  editOptionWizard,
+  getOptionsCollectionWizard
+} from './option';
 
 export const mainWizard = new Scenes.WizardScene<any>('MAIN', async (ctx) => {
   ctx.reply(
@@ -112,5 +125,14 @@ export const scenes: Scenes.WizardScene<any>[] = [
   getQuizWizard,
   editQuizWizard,
   questionsWizard,
-  optionsWizard
+  getQuestionsCollectionWizard,
+  createQuestionWizard,
+  editQuestionWizard,
+  deleteQuestionWizard,
+  optionsWizard,
+  createOptionsWizard,
+  addOptionWizard,
+  getOptionsCollectionWizard,
+  editOptionWizard,
+  deleteOptionWizard
 ];

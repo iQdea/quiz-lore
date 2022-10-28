@@ -31,6 +31,7 @@ export class OptionController {
   }
 
   @Patch(':id')
+  @UseGuards(AuthSupertokensGuard)
   async updateOption(
     @Body() data: updateOptionDtoRequest,
     @Param('id') option_id: string
@@ -42,6 +43,7 @@ export class OptionController {
   }
 
   @Delete(':id')
+  @UseGuards(AuthSupertokensGuard)
   async deleteOption(@Param('id') option_id: string): EmptyEndpointResponse {
     await this.optionService.removeOption(option_id);
   }
