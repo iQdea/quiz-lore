@@ -22,78 +22,102 @@ import {
   getOptionsCollectionWizard
 } from './option';
 
-export const mainWizard = new Scenes.WizardScene<any>('MAIN', async (ctx) => {
-  ctx.reply(
-    `Hello, to start using bot go to SignInUp, if you are haven't done it yet`,
-    Markup.inlineKeyboard(
-      [
-        Markup.button.callback('SignInUp', 'signinup'),
-        Markup.button.callback('SignOut', 'signout'),
-        Markup.button.callback('Profile', 'profile'),
-        Markup.button.callback('Quiz', 'quiz')
-      ],
-      { columns: 2 }
-    )
+export const getProfileActionsKeyboard = () => {
+  return Markup.inlineKeyboard(
+    [
+      Markup.button.callback('Получить профиль', 'get_profile'),
+      Markup.button.callback('Редактировать профиль', 'edit_profile'),
+      Markup.button.callback('Отмена', 'cancel')
+    ],
+    { columns: 2 }
   );
+};
+
+export const mainWizard = new Scenes.WizardScene<any>('MAIN', async (ctx) => {
+  if (ctx.session.last_bot_message_id) {
+    ctx.deleteMessage(ctx.session.last_bot_message_id);
+  }
+  if (ctx.session.messageMark && ctx.session.messageMark === ctx.session.last_bot_message_id) {
+    ctx.deleteMessage();
+  }
+  let msgid;
+  if (!ctx.session.auth) {
+    const message = await ctx.reply(
+      `Привет, чтобы начать пользоваться ботом необходимо нажать на кнопку Войти, если вы не сделали это ранее.`,
+      Markup.inlineKeyboard([Markup.button.callback('Войти', 'signinup')], { columns: 2 })
+    );
+    msgid = message.message_id;
+  } else {
+    const message = await ctx.reply(
+      `Меню.`,
+      Markup.inlineKeyboard(
+        [
+          Markup.button.callback('Выйти', 'signout'),
+          Markup.button.callback('Профиль', 'profile'),
+          Markup.button.callback('Квиз', 'quiz')
+        ],
+        { columns: 2 }
+      )
+    );
+    msgid = message.message_id;
+  }
+  Object.assign(ctx.session, { last_bot_message_id: msgid });
   await ctx.scene.leave();
 });
 
 export const signinupWizard = new Scenes.WizardScene<any>('SIGNINUP', async (ctx) => {
   Object.assign(ctx.session, { previousSection: 'MAIN' });
-  ctx.reply(
-    'Which way you want to continue with?',
+  ctx.deleteMessage(ctx.session.last_bot_message_id);
+  const { message_id: msgid } = await ctx.reply(
+    'Каким способом вы хотите войти? Если вы ранее не зарегистрировались, ' +
+      'то выберите любой из способов, чтобы сделать это сейчас',
     Markup.inlineKeyboard(
       [
-        Markup.button.callback('Share Phone Number', 'phone'),
-        Markup.button.callback('Email/Password', 'email'),
-        Markup.button.callback('Cancel', 'cancel')
+        Markup.button.callback('По номеру телефона', 'phone'),
+        Markup.button.callback('Через адрес электронной почты', 'email'),
+        Markup.button.callback('Отмена', 'cancel')
       ],
-      { columns: 2 }
+      { columns: 1 }
     )
   );
+  ctx.session.last_bot_message_id = msgid;
   await ctx.scene.leave();
 });
 
 export const allowPhoneWizard = new Scenes.WizardScene<any>('ALLOW_PHONE', async (ctx) => {
   Object.assign(ctx.session, { previousSection: 'SIGNINUP' });
-  ctx.reply(
-    'Are you sure?',
-    Markup.keyboard([Markup.button.contactRequest('Yes'), Markup.button.callback('No', 'no')])
+  ctx.deleteMessage(ctx.session.last_bot_message_id);
+  const { message_id: msgid } = await ctx.reply(
+    'Вы уверены? Предоставляя доступ к номеру телефона, вы доказываете, что доверяете нам',
+    Markup.keyboard([Markup.button.contactRequest('Да'), Markup.button.callback('Нет', 'no')])
   );
+  ctx.session.last_bot_message_id = msgid;
   await ctx.scene.leave();
 });
 
 export const profileWizard = new Scenes.WizardScene<any>('PROFILE', async (ctx) => {
   Object.assign(ctx.session, { previousSection: 'MAIN' });
-  ctx.reply(
-    'Actions with profile',
-    Markup.inlineKeyboard(
-      [
-        Markup.button.callback('Get Profile', 'get_profile'),
-        Markup.button.callback('Edit Profile', 'edit_profile'),
-        Markup.button.callback('Cancel', 'cancel')
-      ],
-      { columns: 2 }
-    )
-  );
+  ctx.deleteMessage(ctx.session.last_bot_message_id);
+  const { message_id: msgid } = await ctx.reply('Действия с профилем', getProfileActionsKeyboard());
+  ctx.session.last_bot_message_id = msgid;
   await ctx.scene.leave();
 });
 
 export const quizWizard = new Scenes.WizardScene<any>('QUIZ', async (ctx) => {
   Object.assign(ctx.session, { previousSection: 'MAIN' });
   ctx.reply(
-    'Actions with quiz',
+    'Действия с квизом',
     Markup.inlineKeyboard(
       [
-        Markup.button.callback('Create quiz', 'create_quiz'),
-        Markup.button.callback(`Get my quiz's`, `get_user_quiz_collection`),
-        Markup.button.callback('Get history', 'get_history'),
-        Markup.button.callback('Get current quiz', 'get_quiz'),
-        Markup.button.callback('Edit quiz', 'edit_quiz'),
-        Markup.button.callback('Questions', 'questions'),
-        Markup.button.callback('Cancel', 'cancel')
+        Markup.button.callback('Создать квиз', 'create_quiz'),
+        Markup.button.callback(`Отобразить мои квизы`, `get_user_quiz_collection`),
+        Markup.button.callback('Отобразить историю прошедших квизов', 'get_history'),
+        Markup.button.callback('Отобразить квиз', 'get_quiz'),
+        Markup.button.callback('Редактировать квиз', 'edit_quiz'),
+        Markup.button.callback('Вопросы', 'questions'),
+        Markup.button.callback('Отмена', 'cancel')
       ],
-      { columns: 2 }
+      { columns: 1 }
     )
   );
   await ctx.scene.leave();
@@ -102,15 +126,15 @@ export const quizWizard = new Scenes.WizardScene<any>('QUIZ', async (ctx) => {
 export const questionsWizard = new Scenes.WizardScene<any>('QUESTIONS', async (ctx) => {
   Object.assign(ctx.session, { previousSection: 'QUIZ' });
   ctx.reply(
-    'Actions with questions',
+    'Действия с вопросами',
     Markup.inlineKeyboard(
       [
-        Markup.button.callback('Show questions for quiz', 'show_questions'),
-        Markup.button.callback(`Create question`, `create_question`),
-        Markup.button.callback('Edit question', 'edit_question'),
-        Markup.button.callback('Delete question', 'delete_question'),
-        Markup.button.callback('Options', 'options'),
-        Markup.button.callback('Cancel', 'cancel')
+        Markup.button.callback('Отобразить вопросы для квиза', 'show_questions'),
+        Markup.button.callback(`Создать вопрос`, `create_question`),
+        Markup.button.callback('Редактировать вопрос', 'edit_question'),
+        Markup.button.callback('Удалить вопрос', 'delete_question'),
+        Markup.button.callback('Опции', 'options'),
+        Markup.button.callback('Отмена', 'cancel')
       ],
       { columns: 2 }
     )
@@ -121,14 +145,14 @@ export const questionsWizard = new Scenes.WizardScene<any>('QUESTIONS', async (c
 export const optionsWizard = new Scenes.WizardScene<any>('OPTIONS', async (ctx) => {
   Object.assign(ctx.session, { previousSection: 'QUESTIONS' });
   ctx.reply(
-    'Actions with options',
+    'Действия с опциями',
     Markup.inlineKeyboard(
       [
-        Markup.button.callback('Show options for question', 'show_options'),
-        Markup.button.callback(`Create options for question`, `create_options`),
-        Markup.button.callback('Edit option', 'edit_option'),
-        Markup.button.callback('Delete option', 'delete_option'),
-        Markup.button.callback('Cancel', 'cancel')
+        Markup.button.callback('Отобразить опции для вопроса', 'show_options'),
+        Markup.button.callback(`Создать опции к вопросу`, `create_options`),
+        Markup.button.callback('Редактировать опцию', 'edit_option'),
+        Markup.button.callback('Удалить опцию', 'delete_option'),
+        Markup.button.callback('Отмена', 'cancel')
       ],
       { columns: 2 }
     )

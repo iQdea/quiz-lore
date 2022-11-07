@@ -59,7 +59,9 @@ export async function bot() {
     .action('email', async (ctx) => {
       await ctx.scene.enter('EMAIL_PASSWORD_LOGIN');
     })
-    .on('contact', async (ctx) => {
+    .on('contact', async (ctx: any) => {
+      ctx.deleteMessage(ctx.session.last_bot_message_id);
+      ctx.deleteMessage(ctx.message.message_id);
       await ctx.scene.enter('PHONE_LOGIN', { phone: ctx.message.contact.phone_number });
     })
     .action('get_profile', async (ctx) => {
@@ -83,7 +85,7 @@ export async function bot() {
     .action('edit_quiz', async (ctx) => {
       await ctx.scene.enter('EDIT_QUIZ');
     })
-    .hears('No', async (ctx) => {
+    .hears('Нет', async (ctx) => {
       const { previousSection } = JSON.parse(JSON.stringify(ctx.session));
       if (previousSection !== undefined) {
         await ctx.scene.enter(previousSection);

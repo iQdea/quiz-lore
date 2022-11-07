@@ -42,6 +42,7 @@ module.exports = {
     '@typescript-eslint/no-inferrable-types': 'off',
     '@typescript-eslint/no-empty-interface': 'off',
     'node/no-process-env': 'off',
+    'unicorn/no-useless-spread': 'off',
     'no-console': 'warn',
     'max-len': ['error', 120, 4],
     'semi': ['error', 'always'],
