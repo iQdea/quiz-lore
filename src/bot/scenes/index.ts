@@ -32,13 +32,30 @@ export const getProfileActionsKeyboard = () => {
     { columns: 2 }
   );
 };
+export const getQuizActionsKeyboard = () => {
+  return Markup.inlineKeyboard(
+    [
+      Markup.button.callback('Создать квиз', 'create_quiz'),
+      Markup.button.callback(`Отобразить мои квизы`, `get_user_quiz_collection`),
+      Markup.button.callback('Отобразить историю прошедших квизов', 'get_history'),
+      Markup.button.callback('Отобразить квиз', 'get_quiz'),
+      Markup.button.callback('Редактировать квиз', 'edit_quiz'),
+      Markup.button.callback('Вопросы', 'questions'),
+      Markup.button.callback('Отмена', 'cancel')
+    ],
+    { columns: 1 }
+  );
+};
 
 export const mainWizard = new Scenes.WizardScene<any>('MAIN', async (ctx) => {
+  if (ctx.session.messageCounter) {
+    for (const i of ctx.session.messageCounter) {
+      ctx.deleteMessage(i);
+    }
+    ctx.session.messageCounter = undefined;
+  }
   if (ctx.session.last_bot_message_id) {
     ctx.deleteMessage(ctx.session.last_bot_message_id);
-  }
-  if (ctx.session.messageMark && ctx.session.messageMark === ctx.session.last_bot_message_id) {
-    ctx.deleteMessage();
   }
   let msgid;
   if (!ctx.session.auth) {
@@ -67,7 +84,9 @@ export const mainWizard = new Scenes.WizardScene<any>('MAIN', async (ctx) => {
 
 export const signinupWizard = new Scenes.WizardScene<any>('SIGNINUP', async (ctx) => {
   Object.assign(ctx.session, { previousSection: 'MAIN' });
-  ctx.deleteMessage(ctx.session.last_bot_message_id);
+  if (ctx.session.last_bot_message_id) {
+    ctx.deleteMessage(ctx.session.last_bot_message_id);
+  }
   const { message_id: msgid } = await ctx.reply(
     'Каким способом вы хотите войти? Если вы ранее не зарегистрировались, ' +
       'то выберите любой из способов, чтобы сделать это сейчас',
@@ -86,7 +105,9 @@ export const signinupWizard = new Scenes.WizardScene<any>('SIGNINUP', async (ctx
 
 export const allowPhoneWizard = new Scenes.WizardScene<any>('ALLOW_PHONE', async (ctx) => {
   Object.assign(ctx.session, { previousSection: 'SIGNINUP' });
-  ctx.deleteMessage(ctx.session.last_bot_message_id);
+  if (ctx.session.last_bot_message_id) {
+    ctx.deleteMessage(ctx.session.last_bot_message_id);
+  }
   const { message_id: msgid } = await ctx.reply(
     'Вы уверены? Предоставляя доступ к номеру телефона, вы доказываете, что доверяете нам',
     Markup.keyboard([Markup.button.contactRequest('Да'), Markup.button.callback('Нет', 'no')])
@@ -97,7 +118,9 @@ export const allowPhoneWizard = new Scenes.WizardScene<any>('ALLOW_PHONE', async
 
 export const profileWizard = new Scenes.WizardScene<any>('PROFILE', async (ctx) => {
   Object.assign(ctx.session, { previousSection: 'MAIN' });
-  ctx.deleteMessage(ctx.session.last_bot_message_id);
+  if (ctx.session.last_bot_message_id) {
+    ctx.deleteMessage(ctx.session.last_bot_message_id);
+  }
   const { message_id: msgid } = await ctx.reply('Действия с профилем', getProfileActionsKeyboard());
   ctx.session.last_bot_message_id = msgid;
   await ctx.scene.leave();
@@ -105,21 +128,11 @@ export const profileWizard = new Scenes.WizardScene<any>('PROFILE', async (ctx) 
 
 export const quizWizard = new Scenes.WizardScene<any>('QUIZ', async (ctx) => {
   Object.assign(ctx.session, { previousSection: 'MAIN' });
-  ctx.reply(
-    'Действия с квизом',
-    Markup.inlineKeyboard(
-      [
-        Markup.button.callback('Создать квиз', 'create_quiz'),
-        Markup.button.callback(`Отобразить мои квизы`, `get_user_quiz_collection`),
-        Markup.button.callback('Отобразить историю прошедших квизов', 'get_history'),
-        Markup.button.callback('Отобразить квиз', 'get_quiz'),
-        Markup.button.callback('Редактировать квиз', 'edit_quiz'),
-        Markup.button.callback('Вопросы', 'questions'),
-        Markup.button.callback('Отмена', 'cancel')
-      ],
-      { columns: 1 }
-    )
-  );
+  if (ctx.session.last_bot_message_id) {
+    ctx.deleteMessage(ctx.session.last_bot_message_id);
+  }
+  const { message_id: msgid } = await ctx.reply('Действия с квизом', getQuizActionsKeyboard());
+  ctx.session.last_bot_message_id = msgid;
   await ctx.scene.leave();
 });
 
