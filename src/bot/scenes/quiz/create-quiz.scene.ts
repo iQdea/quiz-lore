@@ -18,7 +18,7 @@ export const createQuizWizard = new Scenes.WizardScene<any>(
     try {
       headerList = JSON.parse(JSON.stringify(ctx.session.auth));
     } catch {
-      ctx.reply('Чтобы создать квиз, нужно сначала войти :)');
+      ctx.reply('Чтобы создать квиз, нужно сначала войти 🚪 :)');
       return;
     }
     const { message_id: msgid } = await ctx.reply('Введите название квиза');
@@ -48,7 +48,7 @@ export const createQuizWizard = new Scenes.WizardScene<any>(
       const { message_id: msgid } = await ctx.reply(
         `ID: ${quiz.id} \n\n` + `Название: ${quiz.displayName} \n\n` + `Описание: ${quiz.description} \n\n`
       );
-      const { message_id: dialogid } = await ctx.reply('Действия с квизом', getQuizActionsKeyboard());
+      const { message_id: dialogid } = await ctx.reply('Действия с квизом 🔍', getQuizActionsKeyboard());
       ctx.session.last_bot_message_id = dialogid;
       Object.assign(ctx.session, { messageCounter: [msgid] });
     } catch (error: any) {

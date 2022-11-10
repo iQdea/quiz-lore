@@ -83,7 +83,7 @@ export async function bot() {
     .action('edit_quiz', async (ctx) => {
       await ctx.scene.enter('EDIT_QUIZ');
     })
-    .hears('Нет', async (ctx) => {
+    .hears('❌Нет', async (ctx) => {
       const { previousSection } = JSON.parse(JSON.stringify(ctx.session));
       if (previousSection !== undefined) {
         await ctx.scene.enter(previousSection);

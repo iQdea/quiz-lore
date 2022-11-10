@@ -26,13 +26,13 @@ export const getQuizHistoryWizard = new Scenes.WizardScene<any>('GET_HISTORY', a
         `ID: ${quiz.id} \n\n` +
           `Название: ${quiz.displayName} \n\n` +
           `Описание: ${quiz.description} \n\n` +
-          `Активен: ${quiz.isActive ? 'Да' : 'Нет'} \n\n` +
+          `Активен: ${quiz.isActive ? '✔Да' : '❌Нет'} \n\n` +
           `Участники: ${JSON.stringify(quiz.participants.map((x: any) => x.id))} \n\n` +
           `Вопросы: ${JSON.stringify(quiz.questions.map((x: any) => x.id))} \n\n`
       );
       ids.push(msgid);
     }
-    const { message_id: dialogid } = await ctx.reply('Действия с квизом', getQuizActionsKeyboard());
+    const { message_id: dialogid } = await ctx.reply('Действия с квизом 🔍', getQuizActionsKeyboard());
     ctx.session.last_bot_message_id = dialogid;
     Object.assign(ctx.session, { messageCounter: ids });
   } catch (error: any) {

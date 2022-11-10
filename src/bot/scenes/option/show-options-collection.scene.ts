@@ -37,12 +37,12 @@ export const getOptionsCollectionWizard = new Scenes.WizardScene<any>(
         const { message_id: msgid } = await ctx.reply(
           `ID: ${item.id} \n\n` +
             `Текст: ${item.text} \n\n` +
-            `Ответ: ${item.isAnswer ? 'Да' : 'Нет'} \n\n` +
+            `Ответ: ${item.isAnswer ? '✔Да' : '❌Нет'} \n\n` +
             `ID вопроса: ${item.questionId} \n\n`
         );
         ids.push(msgid);
       }
-      const { message_id: dialogid } = await ctx.reply('Действия с опциями', getOptionsActionsKeyboard());
+      const { message_id: dialogid } = await ctx.reply('Действия с опциями 📝', getOptionsActionsKeyboard());
       ctx.session.last_bot_message_id = dialogid;
       Object.assign(ctx.session, { messageCounter: ids });
     } catch (error: any) {

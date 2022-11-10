@@ -36,7 +36,7 @@ export const getQuestionsCollectionWizard = new Scenes.WizardScene<any>(
         );
         ids.push(msgid);
       }
-      const { message_id: dialogid } = await ctx.reply('Действия с вопросами', getQuestionsActionsKeyboard());
+      const { message_id: dialogid } = await ctx.reply('Действия с вопросами ❓', getQuestionsActionsKeyboard());
       ctx.session.last_bot_message_id = dialogid;
       Object.assign(ctx.session, { messageCounter: ids });
     } catch (error: any) {

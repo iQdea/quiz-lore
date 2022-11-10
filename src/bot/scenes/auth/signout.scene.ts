@@ -7,7 +7,7 @@ export const signoutWizard = new Scenes.WizardScene<any>('SIGNOUT', async (ctx) 
   try {
     headerList = JSON.parse(JSON.stringify(ctx.session.auth));
   } catch {
-    ctx.reply('Чтобы выйти, нужно сначала войти :)');
+    ctx.reply('Чтобы выйти 🚪, нужно сначала войти 🚪 :)');
     await ctx.scene.leave();
   }
   try {

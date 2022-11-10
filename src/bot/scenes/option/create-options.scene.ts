@@ -18,7 +18,7 @@ export const createOptionsWizard = new Scenes.WizardScene<any>(
     try {
       headerList = JSON.parse(JSON.stringify(ctx.session.auth));
     } catch {
-      ctx.reply('Чтобы создать опции, нужно сначала войти :)');
+      ctx.reply('Чтобы создать опции, нужно сначала войти 🚪 :)');
       return;
     }
     Object.assign(ctx.session, { options: [] });
@@ -34,7 +34,7 @@ export const createOptionsWizard = new Scenes.WizardScene<any>(
       'Нажмите добавить опцию',
       Markup.inlineKeyboard([
         Markup.button.callback(`Добавить опцию`, `add_option`),
-        Markup.button.callback('Отмена', 'cancel')
+        Markup.button.callback('Отмена 🚫', 'cancel')
       ])
     );
     ctx.session.last_bot_message_id = msgid;
@@ -53,7 +53,7 @@ export const addOptionWizard = new Scenes.WizardScene<any>(
     try {
       headerList = JSON.parse(JSON.stringify(ctx.session.auth));
     } catch {
-      ctx.reply('Чтобы создать опции, нужно сначала войти :)');
+      ctx.reply('Чтобы создать опции, нужно сначала войти 🚪 :)');
       return;
     }
     const { message_id: msgid } = await ctx.reply('Введите текст опции');
@@ -66,7 +66,7 @@ export const addOptionWizard = new Scenes.WizardScene<any>(
     ctx.deleteMessage(ctx.message.message_id);
     const { message_id: msgid } = await ctx.reply(
       'Является ли опция ответом на вопрос?',
-      Markup.inlineKeyboard([Markup.button.callback('Да', 'true'), Markup.button.callback('Нет', 'false')])
+      Markup.inlineKeyboard([Markup.button.callback('✔Да', 'true'), Markup.button.callback('❌Нет', 'false')])
     );
     ctx.session.last_bot_message_id = msgid;
     await ctx.wizard.next();
@@ -80,7 +80,7 @@ export const addOptionWizard = new Scenes.WizardScene<any>(
     });
     const { message_id: msgid } = await ctx.reply(
       'Успешно записано, хотите ли вы добавить еще опции?',
-      Markup.inlineKeyboard([Markup.button.callback('Да', 'yes'), Markup.button.callback('Нет', 'no')])
+      Markup.inlineKeyboard([Markup.button.callback('✔Да', 'yes'), Markup.button.callback('❌Нет', 'no')])
     );
     ctx.session.last_bot_message_id = msgid;
     await ctx.wizard.next();
@@ -113,12 +113,12 @@ export const addOptionWizard = new Scenes.WizardScene<any>(
           const { message_id: msgid } = await ctx.reply(
             `ID: ${item.id} \n\n` +
               `Текст: ${item.text} \n\n` +
-              `Ответ: ${item.isAnswer ? 'Да' : 'Нет'} \n\n` +
+              `Ответ: ${item.isAnswer ? '✔Да' : '❌Нет'} \n\n` +
               `ID вопроса: ${item.questionId} \n\n`
           );
           ids.push(msgid);
         }
-        const { message_id: dialogid } = await ctx.reply('Действия с опциями', getOptionsActionsKeyboard());
+        const { message_id: dialogid } = await ctx.reply('Действия с опциями 📝', getOptionsActionsKeyboard());
         ctx.session.last_bot_message_id = dialogid;
         Object.assign(ctx.session, { messageCounter: ids });
       } catch (error: any) {

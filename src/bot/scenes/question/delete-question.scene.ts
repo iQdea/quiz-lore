@@ -18,7 +18,7 @@ export const deleteQuestionWizard = new Scenes.WizardScene<any>(
     try {
       headerList = JSON.parse(JSON.stringify(ctx.session.auth));
     } catch {
-      ctx.reply('Чтобы удалить вопрос, нужно сначала войти :)');
+      ctx.reply('Чтобы удалить вопрос, нужно сначала войти 🚪 :)');
       return;
     }
     const { message_id: msgid } = await ctx.reply('Введите id вопроса');
@@ -48,7 +48,7 @@ export const deleteQuestionWizard = new Scenes.WizardScene<any>(
         }
       });
       const { message_id: msgid } = await ctx.reply('Успешно удалено');
-      const { message_id: dialogid } = await ctx.reply('Действия с вопросами', getQuestionsActionsKeyboard());
+      const { message_id: dialogid } = await ctx.reply('Действия с вопросами ❓', getQuestionsActionsKeyboard());
       ctx.session.last_bot_message_id = dialogid;
       Object.assign(ctx.session, { messageCounter: [msgid] });
     } catch (error: any) {

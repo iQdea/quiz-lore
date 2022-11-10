@@ -16,7 +16,7 @@ export const getQuizUserCollectionWizard = new Scenes.WizardScene<any>('GET_QUIZ
   try {
     headerList = JSON.parse(JSON.stringify(ctx.session.auth));
   } catch {
-    ctx.reply('Чтобы получить коллекцию квизов, нужно сначала войти :)');
+    ctx.reply('Чтобы получить коллекцию квизов, нужно сначала войти 🚪 :)');
     return;
   }
 
@@ -38,7 +38,7 @@ export const getQuizUserCollectionWizard = new Scenes.WizardScene<any>('GET_QUIZ
       );
       ids.push(msgid);
     }
-    const { message_id: dialogid } = await ctx.reply('Действия с квизом', getQuizActionsKeyboard());
+    const { message_id: dialogid } = await ctx.reply('Действия с квизом 🔍', getQuizActionsKeyboard());
     ctx.session.last_bot_message_id = dialogid;
     Object.assign(ctx.session, { messageCounter: ids });
   } catch (error: any) {

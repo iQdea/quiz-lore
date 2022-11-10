@@ -19,7 +19,7 @@ export const editProfileWizard = new Scenes.WizardScene<any>(
     try {
       headerList = JSON.parse(JSON.stringify(ctx.session.auth));
     } catch {
-      ctx.reply('Чтобы получить профиль, нужно сначала войти :)');
+      ctx.reply('Чтобы получить профиль, нужно сначала войти 🚪 :)');
       return;
     }
     const { message_id: msgid } = await ctx.reply(
@@ -66,7 +66,7 @@ export const editProfileWizard = new Scenes.WizardScene<any>(
           `Фамилия: ${user.lastName} \n\n` +
           `День рождения: ${user.birthDate} \n\n`
       );
-      const { message_id: dialogid } = await ctx.reply('Действия с профилем', getProfileActionsKeyboard());
+      const { message_id: dialogid } = await ctx.reply('Действия с профилем 👨‍', getProfileActionsKeyboard());
       ctx.session.last_bot_message_id = dialogid;
       Object.assign(ctx.session, { messageCounter: [msgid] });
     } catch (error: any) {
