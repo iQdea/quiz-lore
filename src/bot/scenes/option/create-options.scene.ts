@@ -38,7 +38,7 @@ export const createOptionsWizard = new Scenes.WizardScene<any>(
       ])
     );
     ctx.session.last_bot_message_id = msgid;
-    ctx.deleteMessage(ctx.session.last_bot_message_id);
+    Object.assign(ctx.session, { startId: msgid });
     await ctx.scene.leave();
   }
 );
@@ -46,6 +46,10 @@ export const createOptionsWizard = new Scenes.WizardScene<any>(
 export const addOptionWizard = new Scenes.WizardScene<any>(
   'ADD_OPTION',
   async (ctx) => {
+    if (ctx.scene.state.startId) {
+      ctx.deleteMessage(ctx.scene.state.startId);
+      ctx.session.startId = undefined;
+    }
     try {
       headerList = JSON.parse(JSON.stringify(ctx.session.auth));
     } catch {

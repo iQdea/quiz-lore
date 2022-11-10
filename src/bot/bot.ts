@@ -45,7 +45,7 @@ export async function bot() {
       await ctx.scene.enter('CREATE_OPTIONS');
     })
     .action('add_option', async (ctx) => {
-      await ctx.scene.enter('ADD_OPTION');
+      await ctx.scene.enter('ADD_OPTION', ctx.session);
     })
     .action('edit_option', async (ctx) => {
       await ctx.scene.enter('EDIT_OPTION');
