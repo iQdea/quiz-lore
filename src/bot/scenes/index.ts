@@ -46,6 +46,31 @@ export const getQuizActionsKeyboard = () => {
     { columns: 1 }
   );
 };
+export const getQuestionsActionsKeyboard = () => {
+  return Markup.inlineKeyboard(
+    [
+      Markup.button.callback('Отобразить вопросы для квиза', 'show_questions'),
+      Markup.button.callback(`Создать вопрос`, `create_question`),
+      Markup.button.callback('Редактировать вопрос', 'edit_question'),
+      Markup.button.callback('Удалить вопрос', 'delete_question'),
+      Markup.button.callback('Опции', 'options'),
+      Markup.button.callback('Отмена', 'cancel')
+    ],
+    { columns: 2 }
+  );
+};
+export const getOptionsActionsKeyboard = () => {
+  return Markup.inlineKeyboard(
+    [
+      Markup.button.callback('Отобразить опции для вопроса', 'show_options'),
+      Markup.button.callback(`Создать опции к вопросу`, `create_options`),
+      Markup.button.callback('Редактировать опцию', 'edit_option'),
+      Markup.button.callback('Удалить опцию', 'delete_option'),
+      Markup.button.callback('Отмена', 'cancel')
+    ],
+    { columns: 2 }
+  );
+};
 
 export const mainWizard = new Scenes.WizardScene<any>('MAIN', async (ctx) => {
   if (ctx.session.messageCounter) {
@@ -84,6 +109,12 @@ export const mainWizard = new Scenes.WizardScene<any>('MAIN', async (ctx) => {
 
 export const signinupWizard = new Scenes.WizardScene<any>('SIGNINUP', async (ctx) => {
   Object.assign(ctx.session, { previousSection: 'MAIN' });
+  if (ctx.session.messageCounter) {
+    for (const i of ctx.session.messageCounter) {
+      ctx.deleteMessage(i);
+    }
+    ctx.session.messageCounter = undefined;
+  }
   if (ctx.session.last_bot_message_id) {
     ctx.deleteMessage(ctx.session.last_bot_message_id);
   }
@@ -105,6 +136,12 @@ export const signinupWizard = new Scenes.WizardScene<any>('SIGNINUP', async (ctx
 
 export const allowPhoneWizard = new Scenes.WizardScene<any>('ALLOW_PHONE', async (ctx) => {
   Object.assign(ctx.session, { previousSection: 'SIGNINUP' });
+  if (ctx.session.messageCounter) {
+    for (const i of ctx.session.messageCounter) {
+      ctx.deleteMessage(i);
+    }
+    ctx.session.messageCounter = undefined;
+  }
   if (ctx.session.last_bot_message_id) {
     ctx.deleteMessage(ctx.session.last_bot_message_id);
   }
@@ -118,6 +155,12 @@ export const allowPhoneWizard = new Scenes.WizardScene<any>('ALLOW_PHONE', async
 
 export const profileWizard = new Scenes.WizardScene<any>('PROFILE', async (ctx) => {
   Object.assign(ctx.session, { previousSection: 'MAIN' });
+  if (ctx.session.messageCounter) {
+    for (const i of ctx.session.messageCounter) {
+      ctx.deleteMessage(i);
+    }
+    ctx.session.messageCounter = undefined;
+  }
   if (ctx.session.last_bot_message_id) {
     ctx.deleteMessage(ctx.session.last_bot_message_id);
   }
@@ -128,6 +171,12 @@ export const profileWizard = new Scenes.WizardScene<any>('PROFILE', async (ctx) 
 
 export const quizWizard = new Scenes.WizardScene<any>('QUIZ', async (ctx) => {
   Object.assign(ctx.session, { previousSection: 'MAIN' });
+  if (ctx.session.messageCounter) {
+    for (const i of ctx.session.messageCounter) {
+      ctx.deleteMessage(i);
+    }
+    ctx.session.messageCounter = undefined;
+  }
   if (ctx.session.last_bot_message_id) {
     ctx.deleteMessage(ctx.session.last_bot_message_id);
   }
@@ -138,38 +187,33 @@ export const quizWizard = new Scenes.WizardScene<any>('QUIZ', async (ctx) => {
 
 export const questionsWizard = new Scenes.WizardScene<any>('QUESTIONS', async (ctx) => {
   Object.assign(ctx.session, { previousSection: 'QUIZ' });
-  ctx.reply(
-    'Действия с вопросами',
-    Markup.inlineKeyboard(
-      [
-        Markup.button.callback('Отобразить вопросы для квиза', 'show_questions'),
-        Markup.button.callback(`Создать вопрос`, `create_question`),
-        Markup.button.callback('Редактировать вопрос', 'edit_question'),
-        Markup.button.callback('Удалить вопрос', 'delete_question'),
-        Markup.button.callback('Опции', 'options'),
-        Markup.button.callback('Отмена', 'cancel')
-      ],
-      { columns: 2 }
-    )
-  );
+  if (ctx.session.messageCounter) {
+    for (const i of ctx.session.messageCounter) {
+      ctx.deleteMessage(i);
+    }
+    ctx.session.messageCounter = undefined;
+  }
+  if (ctx.session.last_bot_message_id) {
+    ctx.deleteMessage(ctx.session.last_bot_message_id);
+  }
+  const { message_id: msgid } = await ctx.reply('Действия с вопросами', getQuestionsActionsKeyboard());
+  ctx.session.last_bot_message_id = msgid;
   await ctx.scene.leave();
 });
 
 export const optionsWizard = new Scenes.WizardScene<any>('OPTIONS', async (ctx) => {
   Object.assign(ctx.session, { previousSection: 'QUESTIONS' });
-  ctx.reply(
-    'Действия с опциями',
-    Markup.inlineKeyboard(
-      [
-        Markup.button.callback('Отобразить опции для вопроса', 'show_options'),
-        Markup.button.callback(`Создать опции к вопросу`, `create_options`),
-        Markup.button.callback('Редактировать опцию', 'edit_option'),
-        Markup.button.callback('Удалить опцию', 'delete_option'),
-        Markup.button.callback('Отмена', 'cancel')
-      ],
-      { columns: 2 }
-    )
-  );
+  if (ctx.session.messageCounter) {
+    for (const i of ctx.session.messageCounter) {
+      ctx.deleteMessage(i);
+    }
+    ctx.session.messageCounter = undefined;
+  }
+  if (ctx.session.last_bot_message_id) {
+    ctx.deleteMessage(ctx.session.last_bot_message_id);
+  }
+  const { message_id: msgid } = await ctx.reply('Действия с опциями', getOptionsActionsKeyboard());
+  ctx.session.last_bot_message_id = msgid;
   await ctx.scene.leave();
 });
 

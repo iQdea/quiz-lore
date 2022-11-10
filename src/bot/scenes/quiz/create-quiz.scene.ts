@@ -21,7 +21,7 @@ export const createQuizWizard = new Scenes.WizardScene<any>(
       ctx.reply('Чтобы создать квиз, нужно сначала войти :)');
       return;
     }
-    const { message_id: msgid } = await ctx.reply('Enter quiz name');
+    const { message_id: msgid } = await ctx.reply('Введите название квиза');
     ctx.session.last_bot_message_id = msgid;
     await ctx.wizard.next();
   },
@@ -29,7 +29,7 @@ export const createQuizWizard = new Scenes.WizardScene<any>(
     ctx.deleteMessage(ctx.session.last_bot_message_id);
     Object.assign(ctx.wizard.state, { quiz: { displayName: ctx.message.text } });
     ctx.deleteMessage(ctx.message.message_id);
-    const { message_id: msgid } = await ctx.reply('Enter quiz description');
+    const { message_id: msgid } = await ctx.reply('Введите описание квиза');
     ctx.session.last_bot_message_id = msgid;
     await ctx.wizard.next();
   },

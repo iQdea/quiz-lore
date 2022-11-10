@@ -12,8 +12,6 @@ export const getQuizUserCollectionWizard = new Scenes.WizardScene<any>('GET_QUIZ
   }
   if (ctx.session.last_bot_message_id) {
     ctx.deleteMessage(ctx.session.last_bot_message_id);
-  } else {
-    ctx.deleteMessage();
   }
   try {
     headerList = JSON.parse(JSON.stringify(ctx.session.auth));
@@ -31,7 +29,7 @@ export const getQuizUserCollectionWizard = new Scenes.WizardScene<any>('GET_QUIZ
     const { data: quiz_collection } = res.data;
     const ids = [];
     if (quiz_collection.length === 0) {
-      const { message_id: errid } = await ctx.reply(`There are no quiz's`);
+      const { message_id: errid } = await ctx.reply(`Не найдено ни одного квиза`);
       ids.push(errid);
     }
     for (const quiz of quiz_collection) {

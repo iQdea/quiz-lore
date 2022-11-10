@@ -60,8 +60,6 @@ export async function bot() {
       await ctx.scene.enter('EMAIL_PASSWORD_LOGIN');
     })
     .on('contact', async (ctx: any) => {
-      ctx.deleteMessage(ctx.session.last_bot_message_id);
-      ctx.deleteMessage(ctx.message.message_id);
       await ctx.scene.enter('PHONE_LOGIN', { phone: ctx.message.contact.phone_number });
     })
     .action('get_profile', async (ctx) => {

@@ -18,7 +18,7 @@ export const getQuizHistoryWizard = new Scenes.WizardScene<any>('GET_HISTORY', a
     const { data: quiz_history } = res.data;
     const ids = [];
     if (quiz_history.length === 0) {
-      const { message_id: errid } = await ctx.reply(`There are no quiz's`);
+      const { message_id: errid } = await ctx.reply(`Не найдено ни одного квиза`);
       ids.push(errid);
     }
     for (const quiz of quiz_history) {

@@ -5,6 +5,8 @@ import { Dictionary } from '../../interfaces/interface';
 export const phoneLoginWizard = new Scenes.WizardScene<any>(
   'PHONE_LOGIN',
   async (ctx) => {
+    ctx.deleteMessage(ctx.session.last_bot_message_id);
+    ctx.deleteMessage(ctx.message.message_id);
     try {
       ctx.session.contactData = { phone: ctx.wizard.state.phone };
       const res = await axios.post('http://localhost:3300/auth/signinup/code', {
