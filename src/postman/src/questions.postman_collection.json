@@ -1,0 +1,267 @@
+{
+	"info": {
+		"_postman_id": "84ef2418-3512-4c7c-beef-2abbd67086b1",
+		"name": "questions",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24365226"
+	},
+	"item": [
+		{
+			"name": "createUser",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"status ok\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"formFields\": [\r\n    {\r\n      \"id\": \"email\",\r\n      \"value\": \"qqq{{email}}\"\r\n    },\r\n    {\r\n      \"id\": \"password\",\r\n      \"value\": \"{{password}}\"\r\n    }\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{local}}/auth/signup",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"auth",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createQuiz",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"status ok\", function(){",
+							"    pm.response.to.have.status(201);",
+							"    const responseJson = pm.response.json();",
+							"    const id = responseJson.data.id;",
+							"    const displayName = responseJson.data.displayName;",
+							"    const description = responseJson.data.description;",
+							"    pm.globals.set(\"quizIdForQuiz\", id);",
+							"    pm.globals.set(\"displayNameForQuiz\", displayName);",
+							"    pm.globals.set(\"descriptionForQuiz\", description);",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"displayName\": \"a{{displayNameForQuiz}}\",\n  \"description\": \"{{descriptionForQuiz}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{local}}/quiz",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"quiz"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createQuestion",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"status ok\", function(){",
+							"    pm.response.to.have.status(201);",
+							"    const responseJson = pm.response.json();",
+							"    const id = responseJson.data.id;",
+							"    const questionValue = responseJson.data.question;",
+							"    pm.globals.set(\"questionIdForQuestion\", id);",
+							"    pm.globals.set(\"questionValueForQuestion\", questionValue);",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"question\": \"{{questionValue}}\",\n  \"quizId\": \"{{quizIdForQuiz}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{local}}/question",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"question"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getQuestion",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"status ok\", function(){",
+							"    pm.response.to.have.status(200);",
+							"",
+							"    const responseJson = pm.response.json();",
+							"    const question = responseJson.data.question;",
+							"    ",
+							"    pm.expect(responseJson.data.length).not.to.eql(0);",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{local}}/question/{{quizIdForQuiz}}",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"question",
+						"{{quizIdForQuiz}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "modifyQuestion",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"status ok\", function(){",
+							"    pm.response.to.have.status(200);",
+							"    const responseJson = pm.response.json();",
+							"    const question = responseJson.data.question;",
+							"    ",
+							"    pm.expect(question).to.eql(\"another \" + pm.globals.get(\"questionValueForQuestion\"));",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"question\": \"another {{questionValueForQuestion}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{local}}/question/{{questionIdForQuestion}}",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"question",
+						"{{questionIdForQuestion}}"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteQuestion",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"status ok\", function(){",
+							"    pm.response.to.have.status(200);",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{local}}/question?quiz_id={{quizIdForQuiz}}&question_id={{questionIdForQuestion}}",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"question"
+					],
+					"query": [
+						{
+							"key": "quiz_id",
+							"value": "{{quizIdForQuiz}}"
+						},
+						{
+							"key": "question_id",
+							"value": "{{questionIdForQuestion}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

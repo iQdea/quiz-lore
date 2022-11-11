@@ -1,0 +1,158 @@
+{
+	"info": {
+		"_postman_id": "209fcd33-54a0-43e5-9b6f-86a533df1e9e",
+		"name": "user",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24365226"
+	},
+	"item": [
+		{
+			"name": "registerUser",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"user signup should return 200\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"formFields\": [\r\n    {\r\n      \"id\": \"email\",\r\n      \"value\": \"{{email}}\"\r\n    },\r\n    {\r\n      \"id\": \"password\",\r\n      \"value\": \"{{password}}\"\r\n    }\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{local}}/auth/signup",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"auth",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getUserSuccess",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"should return 200\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"has first name\", function(){\r",
+							"    const responseJson = pm.response.json();\r",
+							"    return 'firstName' in responseJson;\r",
+							"})\r",
+							"\r",
+							"pm.test(\"has last name\", function(){\r",
+							"    const responseJson = pm.response.json();\r",
+							"    return 'lastName' in responseJson;\r",
+							"})\r",
+							"\r",
+							"pm.test(\"has birth date\", function(){\r",
+							"    const responseJson = pm.response.json();\r",
+							"    return 'birthDate' in responseJson;\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "{{local}}/user",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "setUserInfo",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"should return 200\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"user info set\", function(){\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.data.user.firstName).to.eql(\"Ivan\");\r",
+							"    pm.expect(responseJson.data.user.lastName).to.eql(\"Ivanov\");\r",
+							"    pm.expect(responseJson.data.user.birthDate).to.eql(\"testDate\");\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"firstName\": \"Ivan\",\r\n  \"lastName\": \"Ivanov\",\r\n  \"birthDate\": \"testDate\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{local}}/user",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -1,0 +1,361 @@
+{
+	"info": {
+		"_postman_id": "89b04268-b967-46b9-9c91-91a6cb20f2ba",
+		"name": "options",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24365226"
+	},
+	"item": [
+		{
+			"name": "createUser",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"status ok\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"formFields\": [\r\n    {\r\n      \"id\": \"email\",\r\n      \"value\": \"{{email}}\"\r\n    },\r\n    {\r\n      \"id\": \"password\",\r\n      \"value\": \"{{password}}\"\r\n    }\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{local}}/auth/signup",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"auth",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createQuiz",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"status ok\", function(){\r",
+							"    pm.response.to.have.status(201);\r",
+							"    const responseJson = pm.response.json();\r",
+							"    const id = responseJson.data.id;\r",
+							"    pm.globals.set(\"quizId\", id);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"displayName\": \"{{quizname}}\",\r\n  \"description\": \"{{quizDescription}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{local}}/quiz",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"quiz"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createQuestion",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"status ok\", function(){\r",
+							"    pm.response.to.have.status(201);\r",
+							"    const responseJson = pm.response.json();\r",
+							"    const id = responseJson.data.id;\r",
+							"    pm.globals.set(\"questionId\", id);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"question\": \"{{questionValue}}\",\r\n  \"quizId\": \"{{quizId}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{local}}/question",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"question"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createOption",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"status ok\", function(){\r",
+							"    pm.response.to.have.status(201);\r",
+							"    const responseJson = pm.response.json();\r",
+							"    const id = responseJson.data[0].id;\r",
+							"    pm.globals.set(\"optionId\", id);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"options\": [\r\n    {\r\n      \"text\": \"name\",\r\n      \"questionId\": \"{{questionId}}\",\r\n      \"isAnswer\": true\r\n    }\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{local}}/option",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"option"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createSecondOption",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"status ok\", function(){\r",
+							"    pm.response.to.have.status(201);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"options\": [\r\n    {\r\n      \"text\": \"nameSecond\",\r\n      \"questionId\": \"{{questionId}}\",\r\n      \"isAnswer\": true\r\n    }\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{local}}/option",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"option"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "modifyOption",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"status ok\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"    const responseJson = pm.response.json();\r",
+							"    const id = responseJson.data.id;\r",
+							"    const text = responseJson.data.text;\r",
+							"    const isAnswer = responseJson.data.isAnswer;\r",
+							"    \r",
+							"    pm.expect(isAnswer).to.eql(false);\r",
+							"    pm.expect(text).to.eql(\"another name\");\r",
+							"    pm.expect(id).to.eql(pm.globals.get(\"optionId\"));\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"text\": \"another name\",\r\n  \"isAnswer\": false\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{local}}/option/{{optionId}}",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"option",
+						"{{optionId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAllQuestionOptions",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"status ok\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.data.length).to.eql(2);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{local}}/option/{{questionId}}",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"option",
+						"{{questionId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteOption",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"status ok\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{local}}/option/{{optionId}}",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"option",
+						"{{optionId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAllQuestionOptionsAfterDeleting",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"status ok\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.data.length).to.eql(1);\r",
+							"    pm.expect(responseJson.data[0].id).not.eql(pm.globals.get(\"optionId\"));\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{local}}/option/{{questionId}}",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"option",
+						"{{questionId}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

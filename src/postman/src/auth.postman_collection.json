@@ -1,0 +1,472 @@
+{
+	"info": {
+		"_postman_id": "aef436fb-5fc0-474a-a693-b2baa1e638c2",
+		"name": "auth",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24365226"
+	},
+	"item": [
+		{
+			"name": "passwordValidationError",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"user signup should return 200\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"returns error\", function(){\r",
+							"    const data = pm.response.json;\r",
+							"    return \"error\" in data;\r",
+							"})\r",
+							"\r",
+							"pm.test(\"status error\", function(){\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.status).to.eql(\"FIELD_ERROR\");\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"formFields\": [\r\n    {\r\n      \"id\": \"email\",\r\n      \"value\": \"{{email}}\"\r\n    },\r\n    {\r\n      \"id\": \"password\",\r\n      \"value\": \"{{wrongPassword}}\"\r\n    }\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{local}}/auth/signup",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"auth",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "statusOK",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"signup\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.response.headers.map(item => {\r",
+							"        if(item.key !== 'Set-Cookie'){\r",
+							"            return;\r",
+							"        }\r",
+							"        const paths = item.value.split(\"=\");\r",
+							"        if(['sAccessToken', 'sIdRefreshToken'].indexOf(paths[0]) === -1){\r",
+							"            return;\r",
+							"        }\r",
+							"        pm.globals.set(paths[0], decodeURIComponent(paths[1].split(';')[0]));\r",
+							"        return;\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							"pm.test(\"user signup should return 200\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"has id\", function(){\r",
+							"    const data = pm.response.json;\r",
+							"    return \"id\" in data;\r",
+							"})\r",
+							"\r",
+							"pm.test(\"status ok\", function(){\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.status).to.eql(\"OK\");\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"formFields\": [\r\n    {\r\n      \"id\": \"email\",\r\n      \"value\": \"{{email}}\"\r\n    },\r\n    {\r\n      \"id\": \"password\",\r\n      \"value\": \"{{correctPassword}}\"\r\n    }\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{local}}/auth/signup",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"auth",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "emailExists",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"user signup should return 200\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.status).to.eql(\"OK\");\r",
+							"    pm.expect(responseJson.exists).to.eql(true);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "rid",
+						"value": "emailpassword",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{local}}/auth/signup/email/exists?email={{email}}",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"auth",
+						"signup",
+						"email",
+						"exists"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "{{email}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "emailAlreadyExistsError",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"user signup should return 200\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"email exists error\", function(){\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.formFields[0].error).to.eql(\"This email already exists. Please sign in instead.\")\r",
+							"})\r",
+							"\r",
+							"pm.test(\"status error\", function(){\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.status).to.eql(\"FIELD_ERROR\");\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"formFields\": [\r\n    {\r\n      \"id\": \"email\",\r\n      \"value\": \"{{email}}\"\r\n    },\r\n    {\r\n      \"id\": \"password\",\r\n      \"value\": \"{{correctPassword}}\"\r\n    }\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{local}}/auth/signup",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"auth",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "signinFail",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"user signup should return 200\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"status \", function(){\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.status).to.eql(\"WRONG_CREDENTIALS_ERROR\");\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"formFields\": [\r\n    {\r\n      \"id\": \"email\",\r\n      \"value\": \"{{email}}\"\r\n    },\r\n    {\r\n      \"id\": \"password\",\r\n      \"value\": \"{{wrongPassword}}\"\r\n    }\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{local}}/auth/signin",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"auth",
+						"signin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "signinFailEmail",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"user signup should return 200\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"status error\", function(){\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.status).to.eql(\"FIELD_ERROR\");\r",
+							"})\r",
+							"\r",
+							"pm.test(\"email error\", function(){\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.formFields[0].error).to.eql(\"Email is invalid\");\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"formFields\": [\r\n    {\r\n      \"id\": \"email\",\r\n      \"value\": \"notRegistered\"\r\n    },\r\n    {\r\n      \"id\": \"password\",\r\n      \"value\": \"{{wrongPassword}}\"\r\n    }\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{local}}/auth/signin",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"auth",
+						"signin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "signinSuccess",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"user signup should return 200\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"has id\", function(){\r",
+							"    const data = pm.response.json;\r",
+							"    return \"id\" in data;\r",
+							"})\r",
+							"\r",
+							"pm.test(\"status ok\", function(){\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.status).to.eql(\"OK\");\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"formFields\": [\r\n    {\r\n      \"id\": \"email\",\r\n      \"value\": \"{{email}}\"\r\n    },\r\n    {\r\n      \"id\": \"password\",\r\n      \"value\": \"{{correctPassword}}\"\r\n    }\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{local}}/auth/signin",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"auth",
+						"signin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "generateResetTokenFail",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"user signup should return 200\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"error name email\", function(){\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.formFields[0].error).to.eql(\"Email is invalid\");\r",
+							"})\r",
+							"\r",
+							"pm.test(\"status error\", function(){\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.status).to.eql(\"FIELD_ERROR\");\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"formFields\": [\r\n    {\r\n      \"id\": \"email\",\r\n      \"value\": \"notRegistered\"\r\n    }\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{local}}/auth/user/password/reset/token",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"auth",
+						"user",
+						"password",
+						"reset",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "generateResetTokenSuccess",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"user signup should return 200\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"status error\", function(){\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.status).to.eql(\"OK\");\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"formFields\": [\r\n    {\r\n      \"id\": \"email\",\r\n      \"value\": \"testuser@gmail.com\"\r\n    }\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{local}}/auth/user/password/reset/token",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"auth",
+						"user",
+						"password",
+						"reset",
+						"token"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

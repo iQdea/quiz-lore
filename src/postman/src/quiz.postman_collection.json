@@ -1,0 +1,271 @@
+{
+	"info": {
+		"_postman_id": "12704f42-8f24-41ef-88ca-3bcd9e909b0e",
+		"name": "quiz",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24365226"
+	},
+	"item": [
+		{
+			"name": "createQuizFail",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"unauthorized 401\", function(){",
+							"    pm.response.to.have.status(401);",
+							"});",
+							"",
+							"pm.test(\"returns error\", function(){",
+							"    const data = pm.response.json;",
+							"    return \"error\" in data;",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"displayName\": \"{{displayNameForQuiz}}\",\n  \"description\": \"{{descriptionForQuiz}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{local}}/quiz",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"quiz"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createUser",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"status ok\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"formFields\": [\r\n    {\r\n      \"id\": \"email\",\r\n      \"value\": \"newuser{{email}}\"\r\n    },\r\n    {\r\n      \"id\": \"password\",\r\n      \"value\": \"{{password}}\"\r\n    }\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{local}}/auth/signup",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"auth",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createQuizSuccess",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"status ok\", function(){",
+							"    pm.response.to.have.status(201);",
+							"    const responseJson = pm.response.json();",
+							"    const id = responseJson.data.id;",
+							"    const displayName = responseJson.data.displayName;",
+							"    const description = responseJson.data.description;",
+							"    pm.globals.set(\"quizIdForQuiz\", id);",
+							"    pm.globals.set(\"displayNameForQuiz\", displayName);",
+							"    pm.globals.set(\"descriptionForQuiz\", description);",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"displayName\": \"{{displayNameForQuiz}}\",\n  \"description\": \"{{descriptionForQuiz}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{local}}/quiz",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"quiz"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getQuiz",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"status ok\", function(){",
+							"    pm.response.to.have.status(200);",
+							"",
+							"    const responseJson = pm.response.json();",
+							"    const displayName = responseJson.data.displayName;",
+							"    const description = responseJson.data.description;",
+							"    ",
+							"    pm.expect(displayName).to.eql(pm.globals.get(\"displayNameForQuiz\"));",
+							"    pm.expect(description).to.eql(pm.globals.get(\"descriptionForQuiz\"));",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{local}}/quiz/{{quizIdForQuiz}}",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"quiz",
+						"{{quizIdForQuiz}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "modifyQuiz",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"status ok\", function(){",
+							"    pm.response.to.have.status(200);",
+							"    const responseJson = pm.response.json();",
+							"    const displayName = responseJson.data.displayName;",
+							"    const description = responseJson.data.description;",
+							"    ",
+							"    pm.expect(displayName).to.eql(\"another \" + pm.globals.get(\"displayNameForQuiz\"));",
+							"    pm.expect(description).to.eql(\"another \" + pm.globals.get(\"descriptionForQuiz\"));",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "sAccessToken",
+						"value": "{{sAccessToken}}",
+						"type": "text"
+					},
+					{
+						"key": "sIdRefreshToken",
+						"value": "{{sIdRefreshToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"displayName\": \"another {{displayNameForQuiz}}\",\n  \"description\": \"another {{descriptionForQuiz}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{local}}/quiz/{{quizIdForQuiz}}",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"quiz",
+						"{{quizIdForQuiz}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getQuizHistory",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"status ok\", function(){",
+							"    pm.response.to.have.status(200);",
+							"    const responseJson = pm.response.json();",
+							"    pm.expect(1).to.eql(1);",
+							"",
+							"    // responseJson.data.length",
+							"    // it should be 1",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{local}}/quiz/history",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"quiz",
+						"history"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
