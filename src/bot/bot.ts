@@ -83,6 +83,21 @@ export async function bot() {
     .action('edit_quiz', async (ctx) => {
       await ctx.scene.enter('EDIT_QUIZ');
     })
+    .action('connect_quiz', async (ctx) => {
+      await ctx.scene.enter('CONNECT_QUIZ');
+    })
+    .action('share_quiz', async (ctx) => {
+      await ctx.scene.enter('SHARE_QUIZ');
+    })
+    .action('start_quiz', async (ctx) => {
+      await ctx.scene.enter('START_QUIZ', ctx.session);
+    })
+    .action('answer_question', async (ctx) => {
+      await ctx.scene.enter('ANSWER_QUESTION');
+    })
+    .action('get_quiz_ratings', async (ctx) => {
+      await ctx.scene.enter('GET_RATINGS');
+    })
     .hears('❌Нет', async (ctx) => {
       const { previousSection } = JSON.parse(JSON.stringify(ctx.session));
       if (previousSection !== undefined) {

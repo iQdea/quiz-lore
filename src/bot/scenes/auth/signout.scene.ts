@@ -33,7 +33,7 @@ export const signoutWizard = new Scenes.WizardScene<any>('SIGNOUT', async (ctx) 
       await ctx.scene.leave();
     }
   } catch (error: any) {
-    ctx.reply(`Что-то пошло не так, ошибка ${error.message}`);
+    ctx.reply(`Что-то пошло не так, ошибка ${error.data.message}`);
   }
   await ctx.scene.leave();
 });

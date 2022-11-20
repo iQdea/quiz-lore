@@ -1,8 +1,19 @@
 import { EntityManager } from '@mikro-orm/postgresql';
-import { Injectable, UnprocessableEntityException } from '@nestjs/common';
+import { ForbiddenException, Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { RequiredEntityData } from '@mikro-orm/core';
+import { generate } from 'otp-generator';
 import { Quiz } from '../entities/quiz.entity';
-import { QuizDtoResponse, ShowQuizDtoResponse, updateQuizDtoRequest } from './quiz.dto';
+import {
+  QuizDtoResponse,
+  QuizRatingDto,
+  saveQuizRatingDtoRequest,
+  ShowQuizDtoResponse,
+  showRatingsDtoResponse,
+  updateQuizDtoRequest
+} from './quiz.dto';
+import { Otp } from '../entities/otp.entity';
+import { OtpDtoRequest, OtpDtoResponse } from './otp.dto';
+import { Participant } from '../entities/participant.entity';
 
 @Injectable()
 export class QuizService {
@@ -28,7 +39,7 @@ export class QuizService {
         createdAt: {
           $lt: new Date()
         },
-        isActive: true
+        isActive: false
       },
       { populate: true }
     );
@@ -55,6 +66,36 @@ export class QuizService {
     await em.persistAndFlush(quiz);
     return quiz;
   }
-  async getRatings(id: string): Promise<any> {}
-  async generateLink(id: string): Promise<any> {}
+  async saveRating(data: saveQuizRatingDtoRequest): Promise<QuizRatingDto> {
+    const em = this.em.fork();
+    const participant = await em.findOneOrFail(Participant, data.participantId);
+    participant.assign({ rating: data.rating });
+    await em.persistAndFlush(participant);
+    return { rating: participant.rating };
+  }
+  async getRatings(id: string): Promise<showRatingsDtoResponse[]> {
+    const em = this.em.fork();
+    const participants = await em.find(Participant, { quiz: id });
+    return participants.map((x) =>
+      Object.assign({}, { participantId: x.id, participantNick: x.nick, rating: x.rating })
+    );
+  }
+  async generateCode(data: OtpDtoRequest, userId: string): Promise<OtpDtoResponse> {
+    const em = this.em.fork();
+    const quiz = await em.findOneOrFail(Quiz, { id: data.quizId, isActive: true }, { populate: true });
+    if (userId !== quiz.createdById) {
+      throw new ForbiddenException(`You must be the owner of quiz to share it`);
+    }
+    if (quiz.questions.length === 0) {
+      throw new UnprocessableEntityException(`Cannot share quiz with zero questions`);
+    }
+    const questions = await quiz.questions.loadItems({ populate: true });
+    if (questions.findIndex((x) => x.options.length > 1) === -1) {
+      throw new UnprocessableEntityException(`Each question should contain at least 2 options`);
+    }
+    const code = generate(6);
+    const otp = em.create(Otp, { code, ownerId: userId, quizId: data.quizId, privateList: data.privateList ?? [] });
+    await em.persistAndFlush(otp);
+    return { code: otp.code };
+  }
 }

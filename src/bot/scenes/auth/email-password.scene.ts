@@ -57,7 +57,6 @@ export const emailLoginWizard = new Scenes.WizardScene<any>(
         );
         ctx.session.last_bot_message_id = msgid;
       } else {
-        ctx.reply('Такой пользователь не зарегистрирован, начинаю процесс регистрации');
         const res = await axios.post('http://localhost:3300/auth/signup', {
           formFields: [
             {
@@ -80,7 +79,8 @@ export const emailLoginWizard = new Scenes.WizardScene<any>(
           }
           Object.assign(ctx.session, { auth: cookiesList });
           const { message_id: msgid } = await ctx.reply(
-            `Поздравляем, вы успешно зарегистрировались в системе. Нажмите 'Далее' чтобы продолжить`,
+            `Внимание: пользователь не существует.` +
+              `Успешно зарегистрирован новый пользователь в системе. Нажмите 'Далее' чтобы продолжить`,
             Markup.inlineKeyboard([Markup.button.callback('Далее', 'start_work')])
           );
           ctx.session.last_bot_message_id = msgid;
@@ -89,7 +89,7 @@ export const emailLoginWizard = new Scenes.WizardScene<any>(
         }
       }
     } catch (error: any) {
-      ctx.reply(`Что-то пошло не так, ошибка ${error.message}`);
+      ctx.reply(`Что-то пошло не так, ошибка ${error.data.message}`);
     }
     await ctx.scene.leave();
   }

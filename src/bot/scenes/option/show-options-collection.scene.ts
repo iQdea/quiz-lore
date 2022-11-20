@@ -46,7 +46,7 @@ export const getOptionsCollectionWizard = new Scenes.WizardScene<any>(
       ctx.session.last_bot_message_id = dialogid;
       Object.assign(ctx.session, { messageCounter: ids });
     } catch (error: any) {
-      ctx.reply(`Что то пошло не так, ошибка ${error.message}`);
+      ctx.reply(`Что то пошло не так, ошибка ${error.data.message}`);
     }
     await ctx.scene.leave();
   }

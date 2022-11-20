@@ -24,6 +24,9 @@ export class Quiz extends BaseEntity<Quiz, 'isActive'> {
   })
   isActive: boolean = true;
 
+  @Property({ nullable: true })
+  maxPlayers?: number;
+
   @OneToMany({
     entity: () => Participant,
     mappedBy: (t) => t.quiz

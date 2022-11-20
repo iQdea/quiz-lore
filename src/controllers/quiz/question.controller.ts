@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { QuestionService } from '../../quiz/questions/question.service';
 import {
   createQuestionDtoRequest,
@@ -18,6 +18,7 @@ export class QuestionController {
   constructor(private readonly questionService: QuestionService) {}
 
   @Get(':quiz_id')
+  @ApiOperation({ summary: 'Получить вопросы к квизу' })
   async showQuestions(@Param('quiz_id') quizId: string): CollectionResponse<QuestionDtoResponse> {
     return {
       dto: QuestionDtoResponse,
@@ -26,6 +27,7 @@ export class QuestionController {
   }
 
   @Post('')
+  @ApiOperation({ summary: 'Создать вопрос к квизу' })
   @UseGuards(AuthSupertokensGuard)
   async createQuestion(@Body() data: createQuestionDtoRequest): EndpointResponse<QuestionDtoResponse> {
     return {
@@ -35,6 +37,7 @@ export class QuestionController {
   }
 
   @Patch(':id')
+  @ApiOperation({ summary: 'Обновить вопрос' })
   @UseGuards(AuthSupertokensGuard)
   async updateQuestion(
     @Body() data: updateQuestionDtoRequest,
@@ -47,6 +50,7 @@ export class QuestionController {
   }
 
   @Delete('')
+  @ApiOperation({ summary: 'Отвязать вопрос от квиза и отправить в архив' })
   @UseGuards(AuthSupertokensGuard)
   async deleteFromQuiz(
     @Query('question_id') question_id: string,

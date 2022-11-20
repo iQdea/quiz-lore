@@ -1,9 +1,9 @@
 import { Scenes } from 'telegraf';
 import axios from 'axios';
-import { getQuestionsActionsKeyboard } from '../index';
+import { getQuizActionsKeyboard } from '../index';
 
-export const getQuestionsCollectionWizard = new Scenes.WizardScene<any>(
-  'GET_QUESTIONS_COLLECTION',
+export const getQuizRatingsWizard = new Scenes.WizardScene<any>(
+  'GET_RATINGS',
   async (ctx) => {
     if (ctx.session.messageCounter) {
       for (const i of ctx.session.messageCounter) {
@@ -19,24 +19,24 @@ export const getQuestionsCollectionWizard = new Scenes.WizardScene<any>(
     await ctx.wizard.next();
   },
   async (ctx) => {
-    ctx.deleteMessage(ctx.session.last_bot_message_id);
     let res;
     try {
-      res = await axios.get(`http://localhost:3300/question/${ctx.message.text}`);
-      ctx.deleteMessage(ctx.message.message_id);
-      const { data: questions_collection } = res.data;
+      res = await axios.get(`http://localhost:3300/quiz/ratings`, { params: { quizId: ctx.message.text } });
+      const { data: quiz_ratings } = res.data;
       const ids = [];
-      if (questions_collection.length === 0) {
-        const { message_id: errid } = await ctx.reply(`Не найдено ни одного вопроса`);
+      if (quiz_ratings.length === 0) {
+        const { message_id: errid } = await ctx.reply(`Не найдено ни одного участия в квизе`);
         ids.push(errid);
       }
-      for (const question of questions_collection) {
+      for (const rate of quiz_ratings) {
         const { message_id: msgid } = await ctx.reply(
-          `ID: ${question.id} \n\n` + `Вопрос: ${question.question} \n\n` + `ID квиза: ${question.quizId} \n\n`
+          `ID участника: ${rate.participantId} \n\n` +
+            `Ник участника: ${rate.participantNick} \n\n` +
+            `Рейтинг: ${rate.rating} \n\n`
         );
         ids.push(msgid);
       }
-      const { message_id: dialogid } = await ctx.reply('Действия с вопросами ❓', getQuestionsActionsKeyboard());
+      const { message_id: dialogid } = await ctx.reply('Действия с квизом 🔍', getQuizActionsKeyboard());
       ctx.session.last_bot_message_id = dialogid;
       Object.assign(ctx.session, { messageCounter: ids });
     } catch (error: any) {

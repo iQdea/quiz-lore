@@ -1,6 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional, Length } from 'class-validator';
 import { Exclude, Expose, Type } from 'class-transformer';
+import { ParticipantDto } from '../participant/participant.dto';
 
 @Exclude()
 export class QuizDto {
@@ -17,7 +18,12 @@ export class QuizDto {
     description: 'A small description for the user'
   })
   description?: string;
+
+  @Expose()
+  @ApiPropertyOptional()
+  maxPlayers?: number;
 }
+@Exclude()
 export class createQuizDtoRequest extends QuizDto {}
 
 @Exclude()
@@ -32,6 +38,11 @@ export class updateQuizDtoRequest {
   @ApiPropertyOptional()
   @IsOptional()
   description?: string;
+
+  @Expose()
+  @ApiPropertyOptional()
+  @IsOptional()
+  maxPlayers?: number;
 }
 
 @Exclude()
@@ -39,17 +50,10 @@ export class QuizDtoResponse extends QuizDto {
   @Expose()
   @ApiProperty()
   id!: string;
-}
-
-@Exclude()
-export class ParticipantDto {
-  @Expose()
-  @ApiProperty()
-  id!: string;
 
   @Expose()
   @ApiProperty()
-  nick!: string;
+  isActive!: boolean;
 }
 
 @Exclude()
@@ -66,10 +70,6 @@ export class QuestionDto {
 @Exclude()
 export class ShowQuizDtoResponse extends QuizDtoResponse {
   @Expose()
-  @ApiProperty()
-  isActive!: boolean;
-
-  @Expose()
   @Type(() => ParticipantDto)
   @ApiProperty({ type: [ParticipantDto] })
   participants?: ParticipantDto[];
@@ -78,4 +78,33 @@ export class ShowQuizDtoResponse extends QuizDtoResponse {
   @Type(() => QuestionDto)
   @ApiProperty({ type: [QuestionDto] })
   questions?: QuestionDto[];
+}
+
+@Exclude()
+export class saveQuizRatingDtoRequest {
+  @Expose()
+  @ApiProperty()
+  rating!: number;
+
+  @Expose()
+  @ApiProperty()
+  participantId!: string;
+}
+
+@Exclude()
+export class QuizRatingDto {
+  @Expose()
+  @ApiProperty()
+  rating?: number;
+}
+
+@Exclude()
+export class showRatingsDtoResponse extends QuizRatingDto {
+  @Expose()
+  @ApiProperty()
+  participantId!: string;
+
+  @Expose()
+  @ApiProperty()
+  participantNick!: string;
 }

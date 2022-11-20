@@ -1,10 +1,10 @@
 import { Scenes } from 'telegraf';
 import axios from 'axios';
-import { getOptionsActionsKeyboard } from '../index';
+import { getQuizActionsKeyboard } from '../index';
 
 let headerList: any;
-export const deleteOptionWizard = new Scenes.WizardScene<any>(
-  'DELETE_OPTION',
+export const shareQuizWizard = new Scenes.WizardScene<any>(
+  'SHARE_QUIZ',
   async (ctx) => {
     if (ctx.session.messageCounter) {
       for (const i of ctx.session.messageCounter) {
@@ -18,24 +18,27 @@ export const deleteOptionWizard = new Scenes.WizardScene<any>(
     try {
       headerList = JSON.parse(JSON.stringify(ctx.session.auth));
     } catch {
-      ctx.reply('Чтобы удалить опцию, нужно сначала войти 🚪 :)');
+      ctx.reply('Чтобы поделиться квизом, нужно сначала войти 🚪 :)');
       return;
     }
-    const { message_id: msgid } = await ctx.reply('Введите id опции');
+    const { message_id: msgid } = await ctx.reply('Введите id квиза');
     ctx.session.last_bot_message_id = msgid;
     await ctx.wizard.next();
   },
   async (ctx) => {
     ctx.deleteMessage(ctx.session.last_bot_message_id);
+    Object.assign(ctx.wizard.state, { share: { quizId: ctx.message.text } });
+    ctx.deleteMessage(ctx.message.message_id);
+    let res;
     try {
-      await axios.delete(`http://localhost:3300/option/${ctx.message.text}`, {
+      res = await axios.post(`http://localhost:3300/quiz/share`, ctx.wizard.state.share, {
         headers: {
           Cookie: `sAccessToken=${headerList.sAccessToken}; sIdRefreshToken=${headerList.sIdRefreshToken}`
         }
       });
-      ctx.deleteMessage(ctx.message.message_id);
-      const { message_id: msgid } = await ctx.reply('Успешно удалено');
-      const { message_id: dialogid } = await ctx.reply('Действия с опциями 📝', getOptionsActionsKeyboard());
+      const { data: connect } = res.data;
+      const { message_id: msgid } = await ctx.reply(`Код подключения: ${connect.code}`);
+      const { message_id: dialogid } = await ctx.reply('Действия с квизом 🔍', getQuizActionsKeyboard());
       ctx.session.last_bot_message_id = dialogid;
       Object.assign(ctx.session, { messageCounter: [msgid] });
     } catch (error: any) {

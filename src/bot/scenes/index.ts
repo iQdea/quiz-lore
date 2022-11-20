@@ -6,7 +6,12 @@ import {
   editQuizWizard,
   getQuizHistoryWizard,
   getQuizUserCollectionWizard,
-  getQuizWizard
+  getQuizWizard,
+  shareQuizWizard,
+  connectQuizWizard,
+  startQuizWizard,
+  answerQuestionWizard,
+  getQuizRatingsWizard
 } from './quiz';
 import {
   getQuestionsCollectionWizard,
@@ -38,8 +43,11 @@ export const getQuizActionsKeyboard = () => {
       Markup.button.callback('Создать квиз 🔨', 'create_quiz'),
       Markup.button.callback(`Отобразить мои квизы 📥`, `get_user_quiz_collection`),
       Markup.button.callback('Отобразить историю прошедших квизов 📥', 'get_history'),
+      Markup.button.callback('Отобразить статистику для квиза 📥', 'get_quiz_ratings'),
       Markup.button.callback('Отобразить квиз 📥', 'get_quiz'),
       Markup.button.callback('Редактировать квиз 🔄', 'edit_quiz'),
+      Markup.button.callback('Поделиться квизом 📥', 'share_quiz'),
+      Markup.button.callback('Подключиться к квизу 📥', 'connect_quiz'),
       Markup.button.callback('Вопросы ❓', 'questions'),
       Markup.button.callback('Отмена 🚫', 'cancel')
     ],
@@ -244,5 +252,10 @@ export const scenes: Scenes.WizardScene<any>[] = [
   getOptionsCollectionWizard,
   editOptionWizard,
   deleteOptionWizard,
-  allowPhoneWizard
+  allowPhoneWizard,
+  shareQuizWizard,
+  connectQuizWizard,
+  startQuizWizard,
+  answerQuestionWizard,
+  getQuizRatingsWizard
 ];
