@@ -35,7 +35,7 @@ export const getQuizWizard = new Scenes.WizardScene<any>(
       ctx.session.last_bot_message_id = dialogid;
       Object.assign(ctx.session, { messageCounter: [msgid] });
     } catch (error: any) {
-      ctx.reply(`Что то пошло не так, ошибка ${error.data.message}`);
+      ctx.reply(`Что то пошло не так, ошибка ${error.data ? error.data.message : error.message}`);
     }
     await ctx.scene.leave();
   }

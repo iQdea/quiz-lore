@@ -18,7 +18,10 @@ export const connectQuizWizard = new Scenes.WizardScene<any>(
     try {
       headerList = JSON.parse(JSON.stringify(ctx.session.auth));
     } catch {
-      ctx.reply('Чтобы присоединиться к квизу, нужно сначала войти 🚪 :)');
+      ctx.reply(
+        'Чтобы присоединиться к квизу, нужно сначала войти 🚪 :)',
+        Markup.inlineKeyboard([Markup.button.callback('Войти 🚪', 'signinup')], { columns: 2 })
+      );
       return;
     }
     Object.assign(ctx.session, { quizResult: 0 });
@@ -59,7 +62,7 @@ export const connectQuizWizard = new Scenes.WizardScene<any>(
       ctx.session.last_bot_message_id = sysmsgid;
       Object.assign(ctx.session, { startedQuizId: participant.quizId });
     } catch (error: any) {
-      ctx.reply(`Что то пошло не так, ошибка ${error.data.message}`);
+      ctx.reply(`Что то пошло не так, ошибка ${error.data ? error.data.message : error.message}`);
     }
     await ctx.scene.leave();
   }
@@ -78,7 +81,10 @@ export const startQuizWizard = new Scenes.WizardScene<any>('START_QUIZ', async (
   try {
     headerList = JSON.parse(JSON.stringify(ctx.session.auth));
   } catch {
-    ctx.reply('Чтобы пройти квиз, нужно сначала войти 🚪 :)');
+    ctx.reply(
+      'Чтобы пройти квиз, нужно сначала войти 🚪 :)',
+      Markup.inlineKeyboard([Markup.button.callback('Войти 🚪', 'signinup')], { columns: 2 })
+    );
     return;
   }
   const questions = await axios.get(`http://localhost:3300/question/${ctx.session.startedQuizId}`, {

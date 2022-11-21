@@ -1,4 +1,4 @@
-import { Scenes } from 'telegraf';
+import { Markup, Scenes } from 'telegraf';
 import axios from 'axios';
 import { getOptionsActionsKeyboard } from '../index';
 
@@ -18,7 +18,10 @@ export const deleteOptionWizard = new Scenes.WizardScene<any>(
     try {
       headerList = JSON.parse(JSON.stringify(ctx.session.auth));
     } catch {
-      ctx.reply('Чтобы удалить опцию, нужно сначала войти 🚪 :)');
+      ctx.reply(
+        'Чтобы удалить опцию, нужно сначала войти 🚪 :)',
+        Markup.inlineKeyboard([Markup.button.callback('Войти 🚪', 'signinup')], { columns: 2 })
+      );
       return;
     }
     const { message_id: msgid } = await ctx.reply('Введите id опции');
@@ -39,7 +42,7 @@ export const deleteOptionWizard = new Scenes.WizardScene<any>(
       ctx.session.last_bot_message_id = dialogid;
       Object.assign(ctx.session, { messageCounter: [msgid] });
     } catch (error: any) {
-      ctx.reply(`Что то пошло не так, ошибка ${error.data.message}`);
+      ctx.reply(`Что то пошло не так, ошибка ${error.data ? error.data.message : error.message}`);
     }
     await ctx.scene.leave();
   }

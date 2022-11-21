@@ -1,10 +1,10 @@
 import { UserService } from '../user/user.service';
-import { Session } from '../auth/session.decorator';
-import { SessionContainer } from 'supertokens-node/recipe/session';
+import { UserId } from '../auth/session.decorator';
 import { AuthSupertokensGuard } from '../auth/auth-supertokens.guard';
 import { Body, Controller, Get, Patch, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { UpdateUserRequestDto } from '../user/user.dto';
+import { UpdateUserRequestDto, UserDtoResponse, UserRatingsDtoResponse } from '../user/user.dto';
+import { EndpointResponse } from '../common/utils/serializer';
 
 @ApiTags('User')
 @Controller({
@@ -17,14 +17,29 @@ export class UserController {
   @Get()
   @ApiOperation({ summary: 'Получить информацию о пользователе по id' })
   @UseGuards(AuthSupertokensGuard)
-  async getUser(@Session() session: SessionContainer): Promise<any> {
-    return await this.userService.showUser(session.getUserId());
+  async getUser(@UserId() userId: string): EndpointResponse<UserDtoResponse> {
+    return {
+      dto: UserDtoResponse,
+      data: await this.userService.showUser(userId)
+    };
+  }
+  @Get('/ratings')
+  @ApiOperation({ summary: 'Получить рейтинги пользователя по квизам' })
+  @UseGuards(AuthSupertokensGuard)
+  async getRatings(@UserId() userId: string): EndpointResponse<UserRatingsDtoResponse> {
+    return {
+      dto: UserRatingsDtoResponse,
+      data: await this.userService.showUserRating(userId)
+    };
   }
 
   @Patch()
   @ApiOperation({ summary: 'Обновить информацию о пользователе по id' })
   @UseGuards(AuthSupertokensGuard)
-  async updateUser(@Session() session: SessionContainer, @Body() data: UpdateUserRequestDto): Promise<any> {
-    return await this.userService.updateUser(data, session.getUserId());
+  async updateUser(@UserId() userId: string, @Body() data: UpdateUserRequestDto): EndpointResponse<UserDtoResponse> {
+    return {
+      dto: UserDtoResponse,
+      data: await this.userService.updateUser(data, userId)
+    };
   }
 }

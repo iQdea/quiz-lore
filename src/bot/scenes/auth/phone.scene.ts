@@ -22,7 +22,7 @@ export const phoneLoginWizard = new Scenes.WizardScene<any>(
       );
       ctx.session.last_bot_message_id = msgid;
     } catch (error: any) {
-      ctx.reply(`Что-то пошло не так, ошибка ${error.data.message}`);
+      ctx.reply(`Что-то пошло не так, ошибка ${error.data ? error.data.message : error.message}`);
       await ctx.scene.leave();
     }
     await ctx.wizard.next();
@@ -54,7 +54,7 @@ export const phoneLoginWizard = new Scenes.WizardScene<any>(
         ctx.reply(`Что-то пошло не так, ошибка ${data.status}`);
       }
     } catch (error: any) {
-      ctx.reply(`Что-то пошло не так, ошибка ${error.data.message}`);
+      ctx.reply(`Что-то пошло не так, ошибка ${error.data ? error.data.message : error.message}`);
     }
     await ctx.scene.leave();
   }

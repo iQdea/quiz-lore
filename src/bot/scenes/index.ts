@@ -1,6 +1,6 @@
 import { Markup, Scenes } from 'telegraf';
 import { emailLoginWizard, phoneLoginWizard, signoutWizard } from './auth';
-import { editProfileWizard, getProfileWizard } from './profile';
+import { editProfileWizard, getProfileWizard, showRatingsWizard } from './profile';
 import {
   createQuizWizard,
   editQuizWizard,
@@ -32,6 +32,7 @@ export const getProfileActionsKeyboard = () => {
     [
       Markup.button.callback('Получить профиль 📥', 'get_profile'),
       Markup.button.callback('Редактировать профиль 🔄', 'edit_profile'),
+      Markup.button.callback('Моя статистика', 'show_my_ratings'),
       Markup.button.callback('Отмена 🚫', 'cancel')
     ],
     { columns: 2 }
@@ -257,5 +258,6 @@ export const scenes: Scenes.WizardScene<any>[] = [
   connectQuizWizard,
   startQuizWizard,
   answerQuestionWizard,
-  getQuizRatingsWizard
+  getQuizRatingsWizard,
+  showRatingsWizard
 ];

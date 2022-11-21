@@ -98,6 +98,9 @@ export async function bot() {
     .action('get_quiz_ratings', async (ctx) => {
       await ctx.scene.enter('GET_RATINGS');
     })
+    .action('show_my_ratings', async (ctx) => {
+      await ctx.scene.enter('SHOW_RATINGS');
+    })
     .hears('❌Нет', async (ctx) => {
       const { previousSection } = JSON.parse(JSON.stringify(ctx.session));
       if (previousSection !== undefined) {

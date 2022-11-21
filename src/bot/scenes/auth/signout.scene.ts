@@ -7,7 +7,10 @@ export const signoutWizard = new Scenes.WizardScene<any>('SIGNOUT', async (ctx) 
   try {
     headerList = JSON.parse(JSON.stringify(ctx.session.auth));
   } catch {
-    ctx.reply('Чтобы выйти 🚪, нужно сначала войти 🚪 :)');
+    ctx.reply(
+      'Чтобы выйти 🚪, нужно сначала войти 🚪 :)',
+      Markup.inlineKeyboard([Markup.button.callback('Войти 🚪', 'signinup')], { columns: 2 })
+    );
     await ctx.scene.leave();
   }
   try {
@@ -33,7 +36,7 @@ export const signoutWizard = new Scenes.WizardScene<any>('SIGNOUT', async (ctx) 
       await ctx.scene.leave();
     }
   } catch (error: any) {
-    ctx.reply(`Что-то пошло не так, ошибка ${error.data.message}`);
+    ctx.reply(`Что-то пошло не так, ошибка ${error.data ? error.data.message : error.message}`);
   }
   await ctx.scene.leave();
 });

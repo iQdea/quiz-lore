@@ -41,6 +41,7 @@ module.exports = {
     '@typescript-eslint/no-empty-function': 'warn',
     '@typescript-eslint/no-inferrable-types': 'off',
     '@typescript-eslint/no-empty-interface': 'off',
+    'unicorn/no-await-expression-member': 'off',
     'node/no-process-env': 'off',
     'unicorn/no-useless-spread': 'off',
     'no-console': 'warn',
