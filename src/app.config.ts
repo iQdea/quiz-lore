@@ -12,7 +12,7 @@ export interface AppConfig {
 }
 
 export default (): AppConfig => ({
-  port: 3300,
+  port: 3000,
   database: process.env.DATABASE_URL || '',
   supertokens: {
     connectionURI: process.env.SUPERTOKENS_CONNECTION_URL || '',
