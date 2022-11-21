@@ -32,6 +32,16 @@ export const createQuizWizard = new Scenes.WizardScene<any>(
     ctx.deleteMessage(ctx.session.last_bot_message_id);
     Object.assign(ctx.wizard.state, { quiz: { displayName: ctx.message.text } });
     ctx.deleteMessage(ctx.message.message_id);
+    const { message_id: msgid } = await ctx.reply('Введите максимальное число участников (-1 - не ограничено)');
+    ctx.session.last_bot_message_id = msgid;
+    await ctx.wizard.next();
+  },
+  async (ctx) => {
+    ctx.deleteMessage(ctx.session.last_bot_message_id);
+    Object.assign(ctx.wizard.state, {
+      quiz: { maxPlayers: ctx.message.text === '-1' ? null : Number(ctx.message.text) }
+    });
+    ctx.deleteMessage(ctx.message.message_id);
     const { message_id: msgid } = await ctx.reply('Введите описание квиза');
     ctx.session.last_bot_message_id = msgid;
     await ctx.wizard.next();
