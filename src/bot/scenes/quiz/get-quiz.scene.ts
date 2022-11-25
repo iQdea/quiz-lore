@@ -1,6 +1,7 @@
 import { Scenes } from 'telegraf';
 import axios from 'axios';
 import { getQuizActionsKeyboard } from '../index';
+import appConfig from '../../../app.config';
 
 export const getQuizWizard = new Scenes.WizardScene<any>(
   'GET_QUIZ',
@@ -19,9 +20,11 @@ export const getQuizWizard = new Scenes.WizardScene<any>(
     await ctx.wizard.next();
   },
   async (ctx) => {
+    ctx.deleteMessage(ctx.session.last_bot_message_id);
     let res;
     try {
-      res = await axios.get(`http://localhost:3300/quiz/${ctx.message.text}`);
+      res = await axios.get(`${appConfig().host}/quiz/${ctx.message.text}`);
+      ctx.deleteMessage(ctx.message.message_id);
       const { data: quiz } = res.data;
       const { message_id: msgid } = await ctx.reply(
         `ID: ${quiz.id} \n\n` +

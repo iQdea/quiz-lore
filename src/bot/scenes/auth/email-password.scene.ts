@@ -1,6 +1,7 @@
 import { Markup, Scenes } from 'telegraf';
 import axios from 'axios';
 import { Dictionary } from '../../interfaces/interface';
+import appConfig from '../../../app.config';
 
 export const emailLoginWizard = new Scenes.WizardScene<any>(
   'EMAIL_PASSWORD_LOGIN',
@@ -30,7 +31,7 @@ export const emailLoginWizard = new Scenes.WizardScene<any>(
     Object.assign(ctx.session.contactData, { password: ctx.message.text });
     ctx.deleteMessage(ctx.message.id);
     try {
-      const res = await axios.post('http://localhost:3300/auth/signin', {
+      const res = await axios.post(`${appConfig().host}/auth/signin`, {
         formFields: [
           {
             id: 'email',
@@ -57,7 +58,7 @@ export const emailLoginWizard = new Scenes.WizardScene<any>(
         );
         ctx.session.last_bot_message_id = msgid;
       } else {
-        const res = await axios.post('http://localhost:3300/auth/signup', {
+        const res = await axios.post(`${appConfig().host}/auth/signup`, {
           formFields: [
             {
               id: 'email',

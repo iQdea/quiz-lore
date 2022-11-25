@@ -1,7 +1,7 @@
 version: "3"
 services:
   quiz-lore-cloudify:
-    image: quiz-lore-cloud
+    image: quiz-lore-cloud:latest
     container_name: 'postgre-ql'
     environment:
       - DATABASE_URL
@@ -14,5 +14,5 @@ services:
       - WEBSITE_BASE_PATH
       - BOT_TOKEN
     ports:
-      - "8888:3000"
+      - "8888:3500"
     restart: unless-stopped

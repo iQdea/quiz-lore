@@ -1,6 +1,7 @@
 import { Scenes } from 'telegraf';
 import axios from 'axios';
 import { getQuizActionsKeyboard } from '../index';
+import appConfig from '../../../app.config';
 
 export const getQuizHistoryWizard = new Scenes.WizardScene<any>('GET_HISTORY', async (ctx) => {
   if (ctx.session.messageCounter) {
@@ -14,7 +15,7 @@ export const getQuizHistoryWizard = new Scenes.WizardScene<any>('GET_HISTORY', a
   }
   let res;
   try {
-    res = await axios.get('http://localhost:3300/quiz/history');
+    res = await axios.get(`${appConfig().host}/quiz/history`);
     const { data: quiz_history } = res.data;
     const ids = [];
     if (quiz_history.length === 0) {

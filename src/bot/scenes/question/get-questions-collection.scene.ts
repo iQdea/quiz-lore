@@ -1,6 +1,7 @@
 import { Scenes } from 'telegraf';
 import axios from 'axios';
 import { getQuestionsActionsKeyboard } from '../index';
+import appConfig from '../../../app.config';
 
 export const getQuestionsCollectionWizard = new Scenes.WizardScene<any>(
   'GET_QUESTIONS_COLLECTION',
@@ -22,7 +23,7 @@ export const getQuestionsCollectionWizard = new Scenes.WizardScene<any>(
     ctx.deleteMessage(ctx.session.last_bot_message_id);
     let res;
     try {
-      res = await axios.get(`http://localhost:3300/question/${ctx.message.text}`);
+      res = await axios.get(`${appConfig().host}/question/${ctx.message.text}`);
       ctx.deleteMessage(ctx.message.message_id);
       const { data: questions_collection } = res.data;
       const ids = [];

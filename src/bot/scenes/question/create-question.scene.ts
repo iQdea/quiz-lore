@@ -1,6 +1,7 @@
 import { Markup, Scenes } from 'telegraf';
 import axios from 'axios';
 import { getQuestionsActionsKeyboard } from '../index';
+import appConfig from '../../../app.config';
 
 let headerList: any;
 export const createQuestionWizard = new Scenes.WizardScene<any>(
@@ -42,7 +43,7 @@ export const createQuestionWizard = new Scenes.WizardScene<any>(
     ctx.deleteMessage(ctx.message.message_id);
     let res;
     try {
-      res = await axios.post('http://localhost:3300/question', ctx.wizard.state.questionObject, {
+      res = await axios.post(`${appConfig().host}/question`, ctx.wizard.state.questionObject, {
         headers: {
           Cookie: `sAccessToken=${headerList.sAccessToken}; sIdRefreshToken=${headerList.sIdRefreshToken}`
         }

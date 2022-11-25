@@ -2,6 +2,7 @@ import { Markup, Scenes } from 'telegraf';
 import axios from 'axios';
 import { Dictionary } from '../../interfaces/interface';
 import { getQuizActionsKeyboard } from '../index';
+import appConfig from '../../../app.config';
 
 let headerList: any;
 export const editQuizWizard = new Scenes.WizardScene<any>(
@@ -59,7 +60,7 @@ export const editQuizWizard = new Scenes.WizardScene<any>(
     let res;
     try {
       res = await axios.patch(
-        `http://localhost:3300/quiz/${ctx.wizard.state.edit.quizId}`,
+        `${appConfig().host}/quiz/${ctx.wizard.state.edit.quizId}`,
         { ...changes },
         {
           headers: {

@@ -2,6 +2,7 @@ import { Markup, Scenes } from 'telegraf';
 import axios from 'axios';
 import { Dictionary } from '../../interfaces/interface';
 import { getQuestionsActionsKeyboard } from '../index';
+import appConfig from '../../../app.config';
 
 let headerList: any;
 export const editQuestionWizard = new Scenes.WizardScene<any>(
@@ -56,7 +57,7 @@ export const editQuestionWizard = new Scenes.WizardScene<any>(
     let res;
     try {
       res = await axios.patch(
-        `http://localhost:3300/question/${ctx.wizard.state.edit.questionId}`,
+        `${appConfig().host}/question/${ctx.wizard.state.edit.questionId}`,
         { ...changes },
         {
           headers: {

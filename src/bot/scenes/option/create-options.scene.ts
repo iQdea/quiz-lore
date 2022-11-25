@@ -1,6 +1,7 @@
 import { Markup, Scenes } from 'telegraf';
 import axios from 'axios';
 import { getOptionsActionsKeyboard } from '../index';
+import appConfig from '../../../app.config';
 
 let headerList: any;
 export const createOptionsWizard = new Scenes.WizardScene<any>(
@@ -99,7 +100,7 @@ export const addOptionWizard = new Scenes.WizardScene<any>(
       let res;
       try {
         res = await axios.post(
-          `http://localhost:3300/option`,
+          `${appConfig().host}/option`,
           {
             options: ctx.session.options
           },

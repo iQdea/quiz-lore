@@ -1,6 +1,7 @@
 import { Markup, Scenes } from 'telegraf';
 import axios from 'axios';
 import { Dictionary } from '../../interfaces/interface';
+import appConfig from '../../../app.config';
 
 export const phoneLoginWizard = new Scenes.WizardScene<any>(
   'PHONE_LOGIN',
@@ -9,7 +10,7 @@ export const phoneLoginWizard = new Scenes.WizardScene<any>(
     ctx.deleteMessage(ctx.message.message_id);
     try {
       ctx.session.contactData = { phone: ctx.wizard.state.phone };
-      const res = await axios.post('http://localhost:3300/auth/signinup/code', {
+      const res = await axios.post(`${appConfig().host}/auth/signinup/code`, {
         phoneNumber: ctx.session.contactData.phone.startsWith('+')
           ? ctx.session.contactData.phone
           : '+' + ctx.session.contactData.phone
@@ -32,7 +33,7 @@ export const phoneLoginWizard = new Scenes.WizardScene<any>(
       ctx.deleteMessage(ctx.session.last_bot_message_id);
       const otp = ctx.message.text;
       ctx.deleteMessage(ctx.message.message_id);
-      const res = await axios.post('http://localhost:3300/auth/signinup/code/consume', {
+      const res = await axios.post(`${appConfig().host}/auth/signinup/code/consume`, {
         ...ctx.session.preauthData,
         userInputCode: otp
       });
