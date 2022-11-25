@@ -1,5 +1,6 @@
 import { Markup, Scenes } from 'telegraf';
 import axios from 'axios';
+import appConfig from '../../../app.config';
 
 export const signoutWizard = new Scenes.WizardScene<any>('SIGNOUT', async (ctx) => {
   ctx.deleteMessage(ctx.session.last_bot_message_id);
@@ -15,7 +16,7 @@ export const signoutWizard = new Scenes.WizardScene<any>('SIGNOUT', async (ctx) 
   }
   try {
     res = await axios.post(
-      'http://localhost:3300/auth/signout',
+      `${appConfig().host}/auth/signout`,
       {},
       {
         headers: {

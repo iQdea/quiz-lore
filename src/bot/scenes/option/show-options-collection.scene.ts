@@ -1,6 +1,7 @@
 import { Scenes } from 'telegraf';
 import axios from 'axios';
 import { getOptionsActionsKeyboard } from '../index';
+import appConfig from '../../../app.config';
 
 export const getOptionsCollectionWizard = new Scenes.WizardScene<any>(
   'GET_OPTIONS_COLLECTION',
@@ -22,12 +23,9 @@ export const getOptionsCollectionWizard = new Scenes.WizardScene<any>(
     ctx.deleteMessage(ctx.session.last_bot_message_id);
     let res;
     try {
-      res = await axios.get(`http://localhost:3300/option/${ctx.message.text}`);
+      res = await axios.get(`${appConfig().host}/option/${ctx.message.text}`);
       ctx.deleteMessage(ctx.message.message_id);
       const { data: options_collection } = res.data;
-      if (options_collection.length === 0) {
-        ctx.reply('There are no options');
-      }
       const ids = [];
       if (options_collection.length === 0) {
         const { message_id: errid } = await ctx.reply(`Не найдено ни одной опции`);

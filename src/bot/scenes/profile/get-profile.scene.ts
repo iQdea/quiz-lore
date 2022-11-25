@@ -1,6 +1,7 @@
 import { Markup, Scenes } from 'telegraf';
 import axios from 'axios';
 import { getProfileActionsKeyboard } from '../index';
+import appConfig from '../../../app.config';
 
 let headerList;
 export const getProfileWizard = new Scenes.WizardScene<any>('GET_PROFILE', async (ctx) => {
@@ -24,7 +25,7 @@ export const getProfileWizard = new Scenes.WizardScene<any>('GET_PROFILE', async
   }
   let res;
   try {
-    res = await axios.get('http://localhost:3300/user', {
+    res = await axios.get(`${appConfig().host}/user`, {
       headers: {
         Cookie: `sAccessToken=${headerList.sAccessToken}; sIdRefreshToken=${headerList.sIdRefreshToken}`
       }

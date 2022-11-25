@@ -1,6 +1,7 @@
 import { Markup, Scenes } from 'telegraf';
 import axios from 'axios';
 import { getQuizActionsKeyboard } from '../index';
+import appConfig from '../../../app.config';
 
 let headerList: any;
 export const connectQuizWizard = new Scenes.WizardScene<any>(
@@ -43,7 +44,7 @@ export const connectQuizWizard = new Scenes.WizardScene<any>(
     ctx.deleteMessage(ctx.message.message_id);
     let res;
     try {
-      res = await axios.post(`http://localhost:3300/participant/connect`, ctx.wizard.state.participant, {
+      res = await axios.post(`${appConfig().host}/participant/connect`, ctx.wizard.state.participant, {
         headers: {
           Cookie: `sAccessToken=${headerList.sAccessToken}; sIdRefreshToken=${headerList.sIdRefreshToken}`
         }
@@ -87,7 +88,7 @@ export const startQuizWizard = new Scenes.WizardScene<any>('START_QUIZ', async (
     );
     return;
   }
-  const questions = await axios.get(`http://localhost:3300/question/${ctx.session.startedQuizId}`, {
+  const questions = await axios.get(`${appConfig().host}/question/${ctx.session.startedQuizId}`, {
     headers: {
       Cookie: `sAccessToken=${headerList.sAccessToken}; sIdRefreshToken=${headerList.sIdRefreshToken}`
     }
@@ -120,7 +121,7 @@ export const answerQuestionWizard = new Scenes.WizardScene<any>(
     const data = ctx.session.quizQuestions.pop();
     if (data) {
       const markups = [];
-      const options = await axios.get(`http://localhost:3300/option/${data.id}`, {
+      const options = await axios.get(`${appConfig().host}/option/${data.id}`, {
         headers: {
           Cookie: `sAccessToken=${headerList.sAccessToken}; sIdRefreshToken=${headerList.sIdRefreshToken}`
         }
@@ -156,7 +157,7 @@ export const answerQuestionWizard = new Scenes.WizardScene<any>(
         } баллов`
       );
       await axios.post(
-        `http://localhost:3300/quiz/ratings`,
+        `${appConfig().host}/quiz/ratings`,
         {
           rating: ctx.session.quizResult,
           participantId: ctx.session.participant.id

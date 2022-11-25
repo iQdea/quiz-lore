@@ -1,6 +1,7 @@
 import { Markup, Scenes } from 'telegraf';
 import axios from 'axios';
 import { getProfileActionsKeyboard } from '../index';
+import appConfig from '../../../app.config';
 
 export const showRatingsWizard = new Scenes.WizardScene<any>('SHOW_RATINGS', async (ctx) => {
   if (ctx.session.messageCounter) {
@@ -24,7 +25,7 @@ export const showRatingsWizard = new Scenes.WizardScene<any>('SHOW_RATINGS', asy
   }
   let res;
   try {
-    res = await axios.get('http://localhost:3300/user/ratings', {
+    res = await axios.get(`${appConfig().host}/user/ratings`, {
       headers: {
         Cookie: `sAccessToken=${headerList.sAccessToken}; sIdRefreshToken=${headerList.sIdRefreshToken}`
       }

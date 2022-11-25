@@ -1,0 +1,18 @@
+version: "3"
+services:
+  quiz-lore-cloudify:
+    image: quiz-lore-cloud:latest
+    container_name: 'postgre-ql'
+    environment:
+      - DATABASE_URL
+      - SUPERTOKENS_CONNECTION_URL
+      - SUPERTOKENS_API_KEY
+      - APP_NAME
+      - API_DOMAIN
+      - WEBSITE_DOMAIN
+      - API_BASE_PATH
+      - WEBSITE_BASE_PATH
+      - BOT_TOKEN
+    ports:
+      - "8888:3500"
+    restart: unless-stopped

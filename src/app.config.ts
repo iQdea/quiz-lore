@@ -3,6 +3,7 @@ import { AuthModuleConfig } from './auth/config-supertokens.interface';
 
 export interface AppConfig {
   port: number;
+  host: string;
   database: string;
   supertokens: AuthModuleConfig;
   cors: CorsOptions;
@@ -12,7 +13,8 @@ export interface AppConfig {
 }
 
 export default (): AppConfig => ({
-  port: 3300,
+  port: 3500,
+  host: `http://localhost:3500`,
   database: process.env.DATABASE_URL || '',
   supertokens: {
     connectionURI: process.env.SUPERTOKENS_CONNECTION_URL || '',

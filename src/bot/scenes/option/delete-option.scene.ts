@@ -1,6 +1,7 @@
 import { Markup, Scenes } from 'telegraf';
 import axios from 'axios';
 import { getOptionsActionsKeyboard } from '../index';
+import appConfig from '../../../app.config';
 
 let headerList: any;
 export const deleteOptionWizard = new Scenes.WizardScene<any>(
@@ -31,7 +32,7 @@ export const deleteOptionWizard = new Scenes.WizardScene<any>(
   async (ctx) => {
     ctx.deleteMessage(ctx.session.last_bot_message_id);
     try {
-      await axios.delete(`http://localhost:3300/option/${ctx.message.text}`, {
+      await axios.delete(`${appConfig().host}/option/${ctx.message.text}`, {
         headers: {
           Cookie: `sAccessToken=${headerList.sAccessToken}; sIdRefreshToken=${headerList.sIdRefreshToken}`
         }

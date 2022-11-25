@@ -1,6 +1,7 @@
 import { Markup, Scenes } from 'telegraf';
 import axios from 'axios';
 import { getQuestionsActionsKeyboard } from '../index';
+import appConfig from '../../../app.config';
 
 let headerList: any;
 export const deleteQuestionWizard = new Scenes.WizardScene<any>(
@@ -41,7 +42,7 @@ export const deleteQuestionWizard = new Scenes.WizardScene<any>(
     Object.assign(ctx.wizard.state.edit, { quizId: ctx.message.text });
     ctx.deleteMessage(ctx.message.message_id);
     try {
-      await axios.delete(`http://localhost:3300/question`, {
+      await axios.delete(`${appConfig().host}/question`, {
         params: {
           question_id: ctx.wizard.state.edit.questionId,
           quiz_id: ctx.wizard.state.edit.quizId

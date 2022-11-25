@@ -1,6 +1,7 @@
 import { Markup, Scenes } from 'telegraf';
 import axios from 'axios';
 import { getQuizActionsKeyboard } from '../index';
+import appConfig from '../../../app.config';
 
 let headerList: any;
 export const getQuizUserCollectionWizard = new Scenes.WizardScene<any>('GET_QUIZ_USER_COLLECTION', async (ctx) => {
@@ -24,7 +25,7 @@ export const getQuizUserCollectionWizard = new Scenes.WizardScene<any>('GET_QUIZ
   }
 
   try {
-    const res = await axios.get('http://localhost:3300/quiz/user_collection', {
+    const res = await axios.get(`${appConfig().host}/quiz/user_collection`, {
       headers: {
         Cookie: `sAccessToken=${headerList.sAccessToken}; sIdRefreshToken=${headerList.sIdRefreshToken}`
       }

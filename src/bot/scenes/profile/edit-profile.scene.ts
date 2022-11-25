@@ -2,6 +2,7 @@ import { Markup, Scenes } from 'telegraf';
 import axios from 'axios';
 import { Dictionary } from '../../interfaces/interface';
 import { getProfileActionsKeyboard } from '../index';
+import appConfig from '../../../app.config';
 
 let headerList: any;
 export const editProfileWizard = new Scenes.WizardScene<any>(
@@ -52,7 +53,7 @@ export const editProfileWizard = new Scenes.WizardScene<any>(
     let res;
     try {
       res = await axios.patch(
-        'http://localhost:3300/user',
+        `${appConfig().host}/user`,
         { ...changes },
         {
           headers: {

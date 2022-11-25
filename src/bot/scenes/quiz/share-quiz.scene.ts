@@ -1,6 +1,7 @@
 import { Markup, Scenes } from 'telegraf';
 import axios from 'axios';
 import { getQuizActionsKeyboard } from '../index';
+import appConfig from '../../../app.config';
 
 let headerList: any;
 export const shareQuizWizard = new Scenes.WizardScene<any>(
@@ -34,7 +35,7 @@ export const shareQuizWizard = new Scenes.WizardScene<any>(
     ctx.deleteMessage(ctx.message.message_id);
     let res;
     try {
-      res = await axios.post(`http://localhost:3300/quiz/share`, ctx.wizard.state.share, {
+      res = await axios.post(`${appConfig().host}/quiz/share`, ctx.wizard.state.share, {
         headers: {
           Cookie: `sAccessToken=${headerList.sAccessToken}; sIdRefreshToken=${headerList.sIdRefreshToken}`
         }

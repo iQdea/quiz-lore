@@ -2,6 +2,7 @@ import { Markup, Scenes } from 'telegraf';
 import axios from 'axios';
 import { Dictionary } from '../../interfaces/interface';
 import { getOptionsActionsKeyboard } from '../index';
+import appConfig from '../../../app.config';
 
 let headerList: any;
 export const editOptionWizard = new Scenes.WizardScene<any>(
@@ -65,7 +66,7 @@ export const editOptionWizard = new Scenes.WizardScene<any>(
     let res;
     try {
       res = await axios.patch(
-        `http://localhost:3300/option/${ctx.wizard.state.edit.optionId}`,
+        `${appConfig().host}/option/${ctx.wizard.state.edit.optionId}`,
         { ...changes },
         {
           headers: {

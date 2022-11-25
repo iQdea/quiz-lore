@@ -9,7 +9,9 @@ const MkORMConfig: Options | Configuration = {
   entitiesTs: ['./src/**/*.entity.ts', './src/**/*.embeddable.ts'],
   type: 'postgresql',
   clientUrl: process.env.DATABASE_URL || '',
-
+  driverOptions: {
+    connection: { ssl: true }
+  },
   schemaGenerator: {
     disableForeignKeys: false
   }
