@@ -39,9 +39,9 @@ export const createQuizWizard = new Scenes.WizardScene<any>(
   },
   async (ctx) => {
     ctx.deleteMessage(ctx.session.last_bot_message_id);
-    Object.assign(ctx.wizard.state, {
-      quiz: { maxPlayers: ctx.message.text === '-1' ? null : Number(ctx.message.text) }
-    });
+    Object.assign(ctx.wizard.state.quiz,
+       { maxPlayers: ctx.message.text === '-1' ? null : Number(ctx.message.text) }
+    );
     ctx.deleteMessage(ctx.message.message_id);
     const { message_id: msgid } = await ctx.reply('Введите описание квиза');
     ctx.session.last_bot_message_id = msgid;
@@ -52,6 +52,7 @@ export const createQuizWizard = new Scenes.WizardScene<any>(
     Object.assign(ctx.wizard.state.quiz, { description: ctx.message.text });
     ctx.deleteMessage(ctx.message.message_id);
     let res;
+    console.log(ctx.wizard.state.quiz);
     try {
       res = await axios.post(`${appConfig().host}/quiz`, ctx.wizard.state.quiz, {
         headers: {

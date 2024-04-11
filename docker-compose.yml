@@ -14,5 +14,5 @@ services:
       - WEBSITE_BASE_PATH
       - BOT_TOKEN
     ports:
-      - "8888:3500"
+      - "8888:3112"
     restart: unless-stopped

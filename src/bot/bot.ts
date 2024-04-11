@@ -119,13 +119,5 @@ export async function bot() {
     .action('phone', async (ctx) => {
       await ctx.scene.enter('ALLOW_PHONE');
     });
-
-  process.once('SIGINT', () => {
-    bot.stop('SIGINT');
-  });
-
-  process.once('SIGTERM', () => {
-    bot.stop('SIGTERM');
-  });
   await bot.launch();
 }
